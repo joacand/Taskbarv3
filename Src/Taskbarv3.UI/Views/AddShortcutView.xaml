@@ -1,0 +1,42 @@
+﻿<Window x:Class="Taskbarv3.UI.Views.AddShortcutView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Add shortcut"
+        Background="#282828" ResizeMode="NoResize"
+        Width="256" Height="240">
+    <Grid>
+        <StackPanel Margin="10">
+            <Label Content="Name:" Foreground="White"></Label>
+            <TextBox Text="{Binding ShortcutName, Mode=TwoWay}"></TextBox>
+            <Label Content="Path to executable/directory:" Foreground="White" Margin="0,5,0,0"></Label>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding ShortcutPath, Mode=TwoWay}" Grid.Column="0" Margin="0,0,5,0"></TextBox>
+                <Button Grid.Column="1" Content="Browse" Width="60"
+                        Command="{Binding BrowsePathCommand}"></Button>
+            </Grid>
+            <Label Content="Icon path:" Foreground="White" Margin="0,5,0,0"></Label>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding ShortcutIconPath, Mode=TwoWay}" Grid.Column="0" Margin="0,0,5,0"></TextBox>
+                <Button Grid.Column="1" Content="Browse" Width="60"
+                        Command="{Binding BrowseIconCommand}"></Button>
+            </Grid>
+            <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                <Button Content="Ok" Margin="0,0,5,0" Width="60"
+                        Command="{Binding OkCommand}"></Button>
+                <Button Content="Cancel" Width="60"
+                        Command="{Binding CancelCommand}"></Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
