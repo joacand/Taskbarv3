@@ -23,6 +23,7 @@ namespace Taskbarv3.UI
             container.RegisterType<IShortcutsHandler, ShortcutsHandler>();
             container.RegisterType<IWorkAreaService, WorkAreaService>();
             container.RegisterType<ISongViewerService, SongViewerService>();
+            container.RegisterType<ICpuUsageService, CpuUsageService>();
             container.RegisterType<IWindowService, WindowService>(new ContainerControlledLifetimeManager());
         }
     }

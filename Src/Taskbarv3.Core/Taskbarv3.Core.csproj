@@ -50,6 +50,7 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Interfaces\ICpuUsageService.cs" />
     <Compile Include="Interfaces\IEvent.cs" />
     <Compile Include="Interfaces\IShortcutsHandler.cs" />
     <Compile Include="Interfaces\IFavoritesService.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Models\PopupWindow.cs" />
     <Compile Include="Models\ShortcutMetaData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\CpuUsageService.cs" />
     <Compile Include="Services\FavoritesService.cs" />
     <Compile Include="Services\MediaControlService.cs" />
     <Compile Include="Services\SongViewerService.cs" />

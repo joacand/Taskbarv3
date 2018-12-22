@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using Taskbarv3.Core.Interfaces;
 using Taskbarv3.Core.Models;
@@ -8,7 +9,7 @@ namespace Taskbarv3.Infrastructure.DataAccess
 {
     public class ShortcutsHandler : IShortcutsHandler
     {
-        private const string shortcutPath = @"shortcuts.json";
+        private static readonly string shortcutPath = ConfigurationManager.AppSettings["ShortcutsName"];
 
         public void SaveToFile(IEnumerable<Shortcut> shortcutsData)
         {

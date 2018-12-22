@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Configuration;
 using System.IO;
 using Taskbarv3.Core.Interfaces;
 using Taskbarv3.Core.Models;
@@ -7,13 +8,16 @@ namespace Taskbarv3.Infrastructure.DataAccess
 {
     public class ConfigHandler : IConfigHandler
     {
-        private const string configPath = @"taskbarConfig.json";
+        private static readonly string configPath = ConfigurationManager.AppSettings["TaskbarConfigName"];
 
         public void SaveToFile(MainConfig config)
         {
             using (StreamWriter file = File.CreateText(configPath))
             {
-                JsonSerializer serializer = new JsonSerializer();
+                JsonSerializer serializer = new JsonSerializer()
+                {
+                    Formatting = Formatting.Indented
+                };
                 serializer.Serialize(file, config);
             }
         }
@@ -34,13 +38,15 @@ namespace Taskbarv3.Infrastructure.DataAccess
                 HueConfig = new HueConfig
                 {
                     HueUser = "",
-                    BridgeUrl = @"http://192.168.1.178/api/",
-                    LightToAffect = 3
+                    BridgeUrl = ConfigurationManager.AppSettings["DefaultBridgeUrl"],
+                    LightToAffect = int.TryParse(ConfigurationManager.AppSettings["DefaultLightToAffect"], out int defaultLight)
+                        ? defaultLight
+                        : 0
                 },
-                SkypeWorkingDirectory = @"C:\Program Files (x86)\Skype\Phone\",
-                SkypeFileName = @"C:\Program Files (x86)\Skype\Phone\Skype.exe",
-                SteamWorkingDirectory = @"E:\Saker\ESteam\",
-                SteamFileName = @"E:\Saker\ESteam\Steam.exe",
+                SkypeWorkingDirectory = ConfigurationManager.AppSettings["SkypeWorkingDirectory"],
+                SkypeFileName = ConfigurationManager.AppSettings["SkypeFileName"],
+                SteamWorkingDirectory = ConfigurationManager.AppSettings["SteamWorkingDirectory"],
+                SteamFileName = ConfigurationManager.AppSettings["SteamFileName"],
             };
             SaveToFile(config);
             return config;

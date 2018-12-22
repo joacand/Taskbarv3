@@ -5,6 +5,8 @@ using Taskbarv3.UI.Models;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
+using System.IO;
+using System;
 
 namespace Taskbarv3.UI.ViewModels
 {
@@ -46,6 +48,19 @@ namespace Taskbarv3.UI.ViewModels
 
         private void OnStartSkypeAndSteamCommand(object _)
         {
+            if (!File.Exists(config.SkypeFileName))
+            {
+                statusSetter.SetStatus($"Unable to find Skype at location: {config.SkypeFileName}");
+                Exit();
+                return;
+            }
+            if (!File.Exists(config.SteamFileName))
+            {
+                statusSetter.SetStatus($"Unable to find Steam at location: {config.SkypeFileName}");
+                Exit();
+                return;
+            }
+
             ProcessStartInfo skypeProcessStartInfo = new ProcessStartInfo
             {
                 WorkingDirectory = config.SkypeWorkingDirectory,
@@ -58,8 +73,15 @@ namespace Taskbarv3.UI.ViewModels
                 FileName = config.SteamFileName
             };
 
-            Process skypeProcess = Process.Start(skypeProcessStartInfo);
-            Process steamProcess = Process.Start(steamProcessStartInfo);
+            try
+            {
+                Process skypeProcess = Process.Start(skypeProcessStartInfo);
+                Process steamProcess = Process.Start(steamProcessStartInfo);
+            }
+            catch (Exception e)
+            {
+                statusSetter.SetStatus($"Exception when opening process: {e}");
+            }
             Exit();
         }
 

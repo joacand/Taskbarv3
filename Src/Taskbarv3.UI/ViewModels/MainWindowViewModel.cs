@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
@@ -24,14 +23,14 @@ namespace Taskbarv3.UI.ViewModels
         private readonly IShortcutsHandler shortcutsHandler;
         private readonly IWorkAreaService workAreaService;
         private readonly IStatusService statusService;
+        private readonly ICpuUsageService cpuUsageService;
         private readonly AddShortcutViewModel addShortcutViewModel;
         private readonly SettingsViewModel settingsViewModel;
 
         private static readonly string SONGVIEWER_OFFLINE = "SongViewer offline";
-        private PerformanceCounter cpuCounter;
         private Timer uiUpdateTimer = new Timer();
         private Timer statusTimer = new Timer();
-        private Timer hueSliderTimer;
+        private Timer hueSliderTimer = new Timer();
         private string dateText = string.Empty;
         private string songViewerText = SONGVIEWER_OFFLINE;
         private int cpuProgressBarValue;
@@ -81,6 +80,7 @@ namespace Taskbarv3.UI.ViewModels
             IShortcutsHandler shortcutsHandler,
             IWorkAreaService workAreaService,
             IStatusService statusService,
+            ICpuUsageService cpuUsageService,
             AddShortcutViewModel addShortcutViewModel,
             SettingsViewModel settingsViewModel)
         {
@@ -95,6 +95,7 @@ namespace Taskbarv3.UI.ViewModels
             this.statusService = statusService;
             this.addShortcutViewModel = addShortcutViewModel;
             this.settingsViewModel = settingsViewModel;
+            this.cpuUsageService = cpuUsageService;
 
             ToggleSongViewerCommand = new RelayCommand(OnToggleSongViewer);
             PlayCommand = new RelayCommand(OnPlayCommand);
@@ -115,32 +116,120 @@ namespace Taskbarv3.UI.ViewModels
             Task.Run(() => LoadShortcuts());
         }
 
-        private void OnOpenSettingsCommand(object _)
+        private async Task InitAsync()
         {
-            windowService.ShowWindow(PopupWindow.Settings, settingsViewModel);
+            UpdateUI();
+            await Task.Run(() =>
+            {
+                config = LoadMainConfig();
+                SongViewerText = SONGVIEWER_OFFLINE;
+                InitHue();
+            });
+            InitTimer();
         }
 
-        private void OnStatusChange(string message)
+        private MainConfig LoadMainConfig()
         {
-            statusMsg = message;
-            statusOn = true;
+            try
+            {
+                return configHandler.LoadFromFile();
+            }
+            catch (Exception e)
+            {
+                statusService.SetStatus($"Exception: {e}");
+            }
+            return null;
+        }
 
-            SongViewerText = message;
-            SongViewerTextColor = TextColors.LimeGreen.ToString();
-            songChanged = true;
-            UpdateSongLabelSize();
+        private void LoadShortcuts()
+        {
+            try
+            {
+                var shortcuts = shortcutsHandler.LoadFromFile();
 
-            statusTimer.Interval = 1000;
-            statusTimer.Elapsed += StatusTimer_Elapsed;
-            statusTimer.Start();
+                foreach (Shortcut shortcut in shortcutsHandler.LoadFromFile())
+                {
+                    Shortcuts.Add(shortcut);
+                }
+            }
+            catch (Exception e)
+            {
+                statusService.SetStatus($"Exception: {e}");
+            }
+        }
+
+        private void OnToggleSongViewer(object _)
+        {
             lastSong = "";
+            if (songViewerService.IsOnline)
+            {
+                songViewerService.Stop();
+                SongViewerText = SONGVIEWER_OFFLINE;
+                favoritesService.Reset();
+            }
+            else
+            {
+                songViewerService.Start();
+                UpdateUI();
+            }
         }
 
-        private void StatusTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void OnPlayCommand(object _)
         {
-            statusOn = false;
-            statusMsg = "";
-            statusTimer.Stop();
+            mediaControlService.PlayPause();
+        }
+
+        private void OnSkipCommand(object _)
+        {
+            mediaControlService.NextSong();
+        }
+
+        private void OnPlayFavoritesCommand(object _)
+        {
+            favoritesService.PlayFavorites();
+        }
+
+        private void OnAddToFavoritesCommand(object _)
+        {
+            bool successful = favoritesService.AddToFavorites();
+            if (successful)
+            {
+                lastSong = "";
+            }
+        }
+
+        private void OnAddShortcutCommand(object _)
+        {
+            windowService.ShowWindow(PopupWindow.AddShortcut, addShortcutViewModel);
+        }
+
+        private void OnStartShortcutActionCommand(object obj)
+        {
+            if (obj is Shortcut shortcut)
+            {
+                try
+                {
+                    shortcut.OpenProcess();
+                }
+                catch (Exception e)
+                {
+                    statusService.SetStatus($"Exception: {e}");
+                }
+            }
+        }
+
+        private void OnRemoveShortcutCommand(object obj)
+        {
+            RemoveShortcut(obj as Shortcut);
+        }
+
+        private void RemoveShortcut(Shortcut shortcut)
+        {
+            if (shortcut != null)
+            {
+                Shortcuts.Remove(shortcut);
+                SaveShortcuts();
+            }
         }
 
         private void OnToggleWorkAreaCommand(object _)
@@ -177,33 +266,32 @@ namespace Taskbarv3.UI.ViewModels
             workAreaService.SetWorkArea(newBounds);
         }
 
-        private void OnRemoveShortcutCommand(object obj)
+        private void OnOpenSettingsCommand(object _)
         {
-            RemoveShortcut(obj as Shortcut);
+            windowService.ShowWindow(PopupWindow.Settings, settingsViewModel);
         }
 
-        private void RemoveShortcut(Shortcut shortcut)
+        private void OnStatusChange(string message)
         {
-            if (shortcut != null)
-            {
-                Shortcuts.Remove(shortcut);
-                SaveShortcuts();
-            }
+            statusMsg = message;
+            statusOn = true;
+
+            SongViewerText = message;
+            SongViewerTextColor = TextColors.LimeGreen.ToString();
+            songChanged = true;
+            UpdateSongLabelSize();
+
+            statusTimer.Interval = 1000;
+            statusTimer.Elapsed += StatusTimer_Elapsed;
+            statusTimer.Start();
+            lastSong = "";
         }
 
-        private void OnStartShortcutActionCommand(object obj)
+        private void StatusTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (obj is Shortcut shortcut)
-            {
-                try
-                {
-                    shortcut.OpenProcess();
-                }
-                catch (Exception e)
-                {
-                    statusService.SetStatus($"Exception: {e}");
-                }
-            }
+            statusOn = false;
+            statusMsg = "";
+            statusTimer.Stop();
         }
 
         private void OnAddShortcutEvent(ShortcutAddedEvent obj)
@@ -219,23 +307,6 @@ namespace Taskbarv3.UI.ViewModels
             }
         }
 
-        private void LoadShortcuts()
-        {
-            try
-            {
-                var shortcuts = shortcutsHandler.LoadFromFile();
-
-                foreach (Shortcut shortcut in shortcutsHandler.LoadFromFile())
-                {
-                    Shortcuts.Add(shortcut);
-                }
-            }
-            catch (Exception e)
-            {
-                statusService.SetStatus($"Exception: {e}");
-            }
-        }
-
         private void SaveShortcuts()
         {
             try
@@ -246,35 +317,6 @@ namespace Taskbarv3.UI.ViewModels
             {
                 statusService.SetStatus($"Exception: {e}");
             }
-        }
-
-        private void OnAddShortcutCommand(object _)
-        {
-            windowService.ShowWindow(PopupWindow.AddShortcut, addShortcutViewModel);
-        }
-
-        private void OnAddToFavoritesCommand(object _)
-        {
-            bool successful = favoritesService.AddToFavorites();
-            if (successful)
-            {
-                lastSong = "";
-            }
-        }
-
-        private void OnPlayFavoritesCommand(object _)
-        {
-            favoritesService.PlayFavorites();
-        }
-
-        private void OnSkipCommand(object _)
-        {
-            mediaControlService.NextSong();
-        }
-
-        private void OnPlayCommand(object _)
-        {
-            mediaControlService.PlayPause();
         }
 
         private void InitTimer()
@@ -289,43 +331,10 @@ namespace Taskbarv3.UI.ViewModels
             UpdateUI();
         }
 
-        private async Task InitAsync()
-        {
-            await Task.Run(() =>
-            {
-                cpuCounter = new PerformanceCounter("Processor Information", "% Processor Time", "_Total");
-                cpuCounter.NextValue();
-            });
-            UpdateUI();
-            await Task.Run(() =>
-            {
-                config = LoadMainConfig();
-                SongViewerText = SONGVIEWER_OFFLINE;
-                InitHue();
-            });
-            InitTimer();
-        }
-
-        private MainConfig LoadMainConfig()
-        {
-            try
-            {
-                return configHandler.LoadFromFile();
-            }
-            catch (Exception e)
-            {
-                statusService.SetStatus($"Exception: {e}");
-            }
-            return null;
-        }
-
         private async void InitHue()
         {
-            hueSliderTimer = new Timer
-            {
-                Interval = 50
-            };
-            hueSliderTimer.Elapsed += HueSliderTimer_Elapsed; ;
+            hueSliderTimer.Interval = 50;
+            hueSliderTimer.Elapsed += HueSliderTimer_Elapsed;
             HueSliderValue = await hueService.GetBrightnessProcentage();
         }
 
@@ -347,7 +356,7 @@ namespace Taskbarv3.UI.ViewModels
         private void UpdateUI()
         {
             UpdateClockDate();
-            UpdateCpuViewer();
+            CpuProgressBarValue = cpuUsageService.NextValue;
 
             if (statusOn)
             {
@@ -408,29 +417,6 @@ namespace Taskbarv3.UI.ViewModels
             if (!DateText.Equals(date))
             {
                 DateText = date;
-            }
-        }
-
-        private void UpdateCpuViewer()
-        {
-            if (cpuCounter == null) return;
-            double nextCpuValue = Math.Round(cpuCounter.NextValue());
-            CpuProgressBarValue = (int)nextCpuValue;
-        }
-
-        private void OnToggleSongViewer(object _)
-        {
-            lastSong = "";
-            if (songViewerService.IsOnline)
-            {
-                songViewerService.Stop();
-                SongViewerText = SONGVIEWER_OFFLINE;
-                favoritesService.Reset();
-            }
-            else
-            {
-                songViewerService.Start();
-                UpdateUI();
             }
         }
     }
