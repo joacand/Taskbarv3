@@ -9,6 +9,7 @@ using Taskbarv3.Core.Models.Events;
 using Taskbarv3.UI.Models;
 using PubSub.Extension;
 using Taskbarv3.Core.Extensions;
+using System.Windows;
 
 namespace Taskbarv3.UI.ViewModels
 {
@@ -51,6 +52,7 @@ namespace Taskbarv3.UI.ViewModels
 
         // Hardcoded constant for now - should be accessed in another way
         private static readonly int WINDOW_HEIGHT = 45;
+        private static readonly int SHORTCUT_WIDTH = 50;
 
         public ObservableCollection<Shortcut> Shortcuts { get; set; } = new ObservableCollection<Shortcut>();
         public string DateText { get => dateText; set => SetProperty(ref dateText, value); }
@@ -200,7 +202,11 @@ namespace Taskbarv3.UI.ViewModels
 
         private void OnAddShortcutCommand(object _)
         {
-            windowService.ShowWindow(PopupWindow.AddShortcut, addShortcutViewModel);
+            windowService.ShowWindow(
+                PopupWindow.AddShortcut,
+                addShortcutViewModel,
+                Application.Current.MainWindow.Left + Shortcuts.Count * SHORTCUT_WIDTH,
+                Application.Current.MainWindow.Top);
         }
 
         private void OnStartShortcutActionCommand(object obj)
@@ -268,7 +274,11 @@ namespace Taskbarv3.UI.ViewModels
 
         private void OnOpenSettingsCommand(object _)
         {
-            windowService.ShowWindow(PopupWindow.Settings, settingsViewModel);
+            windowService.ShowWindow(
+                PopupWindow.Settings,
+                settingsViewModel,
+                Application.Current.MainWindow.Left,
+                Application.Current.MainWindow.Top);
         }
 
         private void OnStatusChange(string message)

@@ -11,7 +11,7 @@ namespace Taskbarv3.UI.Models
     {
         private readonly Dictionary<PopupWindow, Window> openWindows = new Dictionary<PopupWindow, Window>();
 
-        public void ShowWindow(PopupWindow window, object dataContext)
+        public void ShowWindow(PopupWindow window, object dataContext, double parentLeftPosition, double parentTopPosition)
         {
             if (openWindows.ContainsKey(window))
             {
@@ -20,34 +20,36 @@ namespace Taskbarv3.UI.Models
             switch (window)
             {
                 case PopupWindow.AddShortcut:
-                    ShowAddShortcut(dataContext);
+                    ShowAddShortcut(dataContext, parentLeftPosition, parentTopPosition);
                     break;
                 case PopupWindow.Settings:
-                    ShowSettings(dataContext);
+                    ShowSettings(dataContext, parentLeftPosition, parentTopPosition);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(window));
             }
         }
 
-        private void ShowAddShortcut(object dataContext)
+        private void ShowAddShortcut(object dataContext, double leftPosition, double topPosition)
         {
             var addShortcutView = new AddShortcutView
             {
                 DataContext = dataContext,
-                WindowStartupLocation = WindowStartupLocation.CenterScreen
+                Left = leftPosition
             };
+            addShortcutView.Top = topPosition - addShortcutView.Height;
             openWindows.Add(PopupWindow.AddShortcut, addShortcutView);
             addShortcutView.ShowDialog();
         }
 
-        private void ShowSettings(object dataContext)
+        private void ShowSettings(object dataContext, double leftPosition, double topPosition)
         {
             var settingsView = new SettingsView
             {
                 DataContext = dataContext,
-                WindowStartupLocation = WindowStartupLocation.CenterScreen
+                Left = leftPosition
             };
+            settingsView.Top = topPosition - settingsView.Height;
             openWindows.Add(PopupWindow.Settings, settingsView);
             settingsView.ShowDialog();
         }

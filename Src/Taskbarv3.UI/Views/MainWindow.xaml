@@ -116,7 +116,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <Button Grid.Row="0" Grid.Column="0" Width="50" Height="50" Margin="1" BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+            <Button Grid.Row="0" Grid.Column="0" Width="45" Height="45" Margin="1" BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                     Content="Add" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI"
                     Command="{Binding AddShortcutCommand}">
             </Button>
