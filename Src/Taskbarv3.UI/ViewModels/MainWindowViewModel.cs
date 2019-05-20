@@ -29,9 +29,9 @@ namespace Taskbarv3.UI.ViewModels
         private readonly SettingsViewModel settingsViewModel;
 
         private static readonly string SONGVIEWER_OFFLINE = "SongViewer offline";
-        private Timer uiUpdateTimer = new Timer();
-        private Timer statusTimer = new Timer();
-        private Timer hueSliderTimer = new Timer();
+        private readonly Timer uiUpdateTimer = new Timer();
+        private readonly Timer statusTimer = new Timer();
+        private readonly Timer hueSliderTimer = new Timer();
         private string dateText = string.Empty;
         private string songViewerText = SONGVIEWER_OFFLINE;
         private int cpuProgressBarValue;
@@ -259,14 +259,14 @@ namespace Taskbarv3.UI.ViewModels
 
             // Adjust so it fits the second monitor
             newBounds.Left = newBounds.Right;
-            newBounds.Right = newBounds.Left + Convert.ToUInt32(System.Windows.SystemParameters.PrimaryScreenWidth);
+            newBounds.Right = newBounds.Left + Convert.ToUInt32(1920);
             if (reset)
             {
-                newBounds.Bottom = Convert.ToUInt32(System.Windows.SystemParameters.PrimaryScreenHeight);
+                newBounds.Bottom = Convert.ToUInt32(1080);
             }
             else
             {
-                newBounds.Bottom = Convert.ToUInt32(System.Windows.SystemParameters.PrimaryScreenHeight) - Convert.ToUInt32(WINDOW_HEIGHT);
+                newBounds.Bottom = Convert.ToUInt32(1080) - Convert.ToUInt32(WINDOW_HEIGHT);
             }
             customWorkArea = !reset;
             workAreaService.SetWorkArea(newBounds);

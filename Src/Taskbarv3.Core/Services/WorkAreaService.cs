@@ -5,10 +5,7 @@ namespace Taskbarv3.Core.Services
 {
     public class WorkAreaService : IWorkAreaService
     {
-        private const uint SPIF_SENDWININICHANGE = 2;
         private const uint SPIF_UPDATEINIFILE = 1;
-        private const uint SPIF_CHANGE = SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE;
-        private const uint WM_SETTINGCHANGE = 0x1a;
         private const uint SPI_GETWORKAREA = 48;
         private const uint SPI_SETWORKAREA = 0x002F;
 
