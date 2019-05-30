@@ -111,6 +111,7 @@ namespace Taskbarv3.UI.ViewModels
             OpenSettingsCommand = new RelayCommand(OnOpenSettingsCommand);
 
             this.Subscribe<ShortcutAddedEvent>(OnAddShortcutEvent);
+            this.Subscribe<ShortcutModifiedEvent>(OnShortcutModifiedEvent);
             this.statusService.SetStatusAction = OnStatusChange;
             SetWorkArea();
 
@@ -311,10 +312,20 @@ namespace Taskbarv3.UI.ViewModels
                 !string.IsNullOrWhiteSpace(shortcutMetadata.ProcessPath) &&
                 !string.IsNullOrWhiteSpace(shortcutMetadata.WorkingDirectory))
             {
-                Shortcuts.Add(new Shortcut(shortcutMetadata.Name, shortcutMetadata.ProcessPath,
-                    shortcutMetadata.IconPath, shortcutMetadata.WorkingDirectory));
+                Shortcuts.Add(new Shortcut(
+                    shortcutMetadata.Name,
+                    shortcutMetadata.ProcessPath,
+                    shortcutMetadata.IconPath,
+                    shortcutMetadata.WorkingDirectory,
+                    Shortcuts.Count - 1,
+                    Shortcut.CurrentVersion));
                 SaveShortcuts();
             }
+        }
+
+        private void OnShortcutModifiedEvent(ShortcutModifiedEvent obj)
+        {
+            SaveShortcuts();
         }
 
         private void SaveShortcuts()

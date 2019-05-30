@@ -64,6 +64,7 @@
     <Compile Include="Interfaces\IWindowService.cs" />
     <Compile Include="Interfaces\IWorkAreaService.cs" />
     <Compile Include="Interfaces\IMaxRequestsGuard.cs" />
+    <Compile Include="Models\Events\ShortcutModifiedEvent.cs" />
     <Compile Include="Models\Events\ShortcutAddedEvent.cs" />
     <Compile Include="Models\HueConfig.cs" />
     <Compile Include="Models\Hue\Error.cs" />

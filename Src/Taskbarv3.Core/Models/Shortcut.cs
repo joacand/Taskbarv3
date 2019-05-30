@@ -11,10 +11,15 @@ namespace Taskbarv3.Core.Models
         public string ProcessPath { get; set; }
         public string IconPath { get; set; }
         public string WorkingDirectory { get; set; }
+        public int Index { get; set; }
+        public int Version { get; set; }
+
         [JsonIgnore]
         public Action OpenProcess { get; set; }
+        [JsonIgnore]
+        public static int CurrentVersion = 1;
 
-        public Shortcut(string name, string processPath, string iconPath, string workingDirectory)
+        public Shortcut(string name, string processPath, string iconPath, string workingDirectory, int index, int version)
         {
             Name = File.Exists(iconPath)
                 ? ""
@@ -26,6 +31,8 @@ namespace Taskbarv3.Core.Models
 
             WorkingDirectory = workingDirectory;
             ProcessPath = processPath;
+            Index = index;
+            Version = version;
 
             OpenProcess = new Action(OnOpenProcess);
         }

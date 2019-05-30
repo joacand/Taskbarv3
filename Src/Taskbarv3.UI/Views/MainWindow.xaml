@@ -83,15 +83,24 @@
 
         <!-- Shortcuts -->
         <DockPanel Grid.Column="2" LastChildFill="False">
-            <ItemsControl ItemsSource="{Binding Shortcuts}">
+            <ItemsControl Name="shortcutsItemsControl" ItemsSource="{Binding Shortcuts}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.Resources/>
+                        </StackPanel>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
+                <ItemsControl.Resources>
+                    <Style TargetType="{x:Type Button}" x:Key="DragAndDropableButtonStyle" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                        <EventSetter Event="PreviewMouseMove" Handler="Button_PreviewMouseMove"/>
+                        <EventSetter Event="Drop" Handler="Button_Drop"/>
+                        <Setter Property="AllowDrop" Value="True"/>
+                    </Style>
+                </ItemsControl.Resources>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Width="45" Height="45" BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                        <Button Width="45" Height="45" BorderThickness="0" Style="{StaticResource DragAndDropableButtonStyle}"
                                 Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI">
                             <Button.InputBindings>
                                 <MouseBinding Gesture="LeftClick" Command="{Binding Path=DataContext.StartShortcutActionCommand, 
