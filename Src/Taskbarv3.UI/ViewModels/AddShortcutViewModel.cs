@@ -53,7 +53,7 @@ namespace Taskbarv3.UI.ViewModels
             {
                 workingDir = path.Replace(pathSplit[pathSplit.Length - 1], "");
             }
-            this.Publish(new ShortcutAddedEvent(new ShortcutMetaData(ShortcutName, path, ShortcutIconPath, workingDir)));
+            this.Publish(new ShortcutAddedEvent(new ShortcutMetaData(ShortcutName ?? string.Empty, path, ShortcutIconPath, workingDir)));
             windowService.CloseWindow(PopupWindow.AddShortcut);
         }
 

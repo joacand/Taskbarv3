@@ -308,8 +308,7 @@ namespace Taskbarv3.UI.ViewModels
         private void OnAddShortcutEvent(ShortcutAddedEvent obj)
         {
             var shortcutMetadata = obj.ShortcutMetaData;
-            if (!string.IsNullOrWhiteSpace(shortcutMetadata.Name) &&
-                !string.IsNullOrWhiteSpace(shortcutMetadata.ProcessPath) &&
+            if (!string.IsNullOrWhiteSpace(shortcutMetadata.ProcessPath) &&
                 !string.IsNullOrWhiteSpace(shortcutMetadata.WorkingDirectory))
             {
                 Shortcuts.Add(new Shortcut(

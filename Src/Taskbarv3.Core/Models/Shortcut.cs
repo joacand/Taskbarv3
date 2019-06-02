@@ -22,8 +22,8 @@ namespace Taskbarv3.Core.Models
         public Shortcut(string name, string processPath, string iconPath, string workingDirectory, int index, int version)
         {
             Name = File.Exists(iconPath)
-                ? ""
-                : name;
+                ? string.Empty
+                : name ?? string.Empty;
 
             IconPath = string.IsNullOrWhiteSpace(iconPath) || !File.Exists(iconPath)
                 ? null
