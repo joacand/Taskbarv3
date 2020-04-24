@@ -1,15 +1,15 @@
-﻿using System;
+﻿using PubSub.Extension;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
 using System.Windows.Input;
+using Taskbarv3.Core.Extensions;
 using Taskbarv3.Core.Interfaces;
 using Taskbarv3.Core.Models;
 using Taskbarv3.Core.Models.Events;
 using Taskbarv3.UI.Models;
-using PubSub.Extension;
-using Taskbarv3.Core.Extensions;
-using System.Windows;
 
 namespace Taskbarv3.UI.ViewModels
 {
@@ -244,33 +244,35 @@ namespace Taskbarv3.UI.ViewModels
             if (customWorkArea)
             {
                 SetWorkArea(reset: true);
-                statusService.SetStatus("Work area reset");
             }
             else
             {
                 SetWorkArea(reset: false);
-                statusService.SetStatus("Work area set");
             }
         }
 
         private void SetWorkArea(bool reset = false)
         {
-            var original = workAreaService.GetWorkArea(); // Gets working area of primary monitor
-            var newBounds = original;
+            try
+            {
+                var original = workAreaService.GetSecondaryMonitorScreenBounds();
+                var newBounds = original;
 
-            // Adjust so it fits the second monitor
-            newBounds.Left = newBounds.Right;
-            newBounds.Right = newBounds.Left + Convert.ToUInt32(1920);
-            if (reset)
-            {
-                newBounds.Bottom = Convert.ToUInt32(1080);
+                // Adjust so it excludes the taskbar
+                if (!reset)
+                {
+                    newBounds.Bottom -= WINDOW_HEIGHT;
+                }
+
+                customWorkArea = !reset;
+                workAreaService.SetWorkArea(newBounds);
+
+                statusService.SetStatus($"Work area {(reset ? "reset" : "set")}");
             }
-            else
+            catch (Exception ex)
             {
-                newBounds.Bottom = Convert.ToUInt32(1080) - Convert.ToUInt32(WINDOW_HEIGHT);
+                statusService.SetStatus($"Exception when trying to set work area - {ex.Message}");
             }
-            customWorkArea = !reset;
-            workAreaService.SetWorkArea(newBounds);
         }
 
         private void OnOpenSettingsCommand(object _)

@@ -1,10 +1,14 @@
-﻿namespace Taskbarv3.Core.Models
+﻿using System;
+using System.Runtime.InteropServices;
+
+namespace Taskbarv3.Core.Models
 {
+    [StructLayout(LayoutKind.Sequential)]
     public struct RECT
     {
-        public uint Left;
-        public uint Top;
-        public uint Right;
-        public uint Bottom;
+        public Int32 Left;
+        public Int32 Top;
+        public Int32 Right;
+        public Int32 Bottom;
     }
 }

@@ -4,7 +4,7 @@ namespace Taskbarv3.Core.Interfaces
 {
     public interface IWorkAreaService
     {
-        bool SetWorkArea(RECT rect);
-        RECT GetWorkArea();
+        void SetWorkArea(RECT rect);
+        RECT GetSecondaryMonitorScreenBounds();
     }
 }
