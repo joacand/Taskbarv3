@@ -1,10 +1,10 @@
-﻿using System.Windows.Input;
+﻿using Microsoft.Win32;
+using PubSub;
+using System.Windows.Input;
 using Taskbarv3.Core.Interfaces;
 using Taskbarv3.Core.Models;
 using Taskbarv3.Core.Models.Events;
 using Taskbarv3.UI.Models;
-using PubSub.Extension;
-using Microsoft.Win32;
 
 namespace Taskbarv3.UI.ViewModels
 {
@@ -53,7 +53,7 @@ namespace Taskbarv3.UI.ViewModels
             {
                 workingDir = path.Replace(pathSplit[pathSplit.Length - 1], "");
             }
-            this.Publish(new ShortcutAddedEvent(new ShortcutMetaData(ShortcutName ?? string.Empty, path, ShortcutIconPath, workingDir)));
+            Hub.Default.Publish(new ShortcutAddedEvent(new ShortcutMetaData(ShortcutName ?? string.Empty, path, ShortcutIconPath, workingDir)));
             windowService.CloseWindow(PopupWindow.AddShortcut);
         }
 

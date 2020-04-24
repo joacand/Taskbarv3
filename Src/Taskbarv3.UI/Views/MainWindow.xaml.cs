@@ -1,4 +1,4 @@
-﻿using PubSub.Extension;
+﻿using PubSub;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading;
@@ -51,7 +51,7 @@ namespace Taskbarv3.UI.Views
                 list.RemoveAt(list.IndexOf(source));
                 list.Insert(newIndex, source);
                 shortCut.Index = newIndex;
-                this.Publish<ShortcutModifiedEvent>();
+                Hub.Default.Publish<ShortcutModifiedEvent>();
             }
         }
     }

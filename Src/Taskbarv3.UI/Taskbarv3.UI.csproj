@@ -41,8 +41,8 @@
     <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Unity.5.8.13\lib\net47\CommonServiceLocator.dll</HintPath>
     </Reference>
-    <Reference Include="PubSub, Version=3.0.0.0, Culture=neutral, PublicKeyToken=fe4ede83ff72b2e0, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PubSub.3.0.0\lib\netstandard2.0\PubSub.dll</HintPath>
+    <Reference Include="PubSub, Version=4.0.1.0, Culture=neutral, PublicKeyToken=fe4ede83ff72b2e0, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PubSub.4.0.1\lib\netstandard2.0\PubSub.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

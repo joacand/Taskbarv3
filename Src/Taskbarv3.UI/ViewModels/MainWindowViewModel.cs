@@ -1,4 +1,4 @@
-﻿using PubSub.Extension;
+﻿using PubSub;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -110,8 +110,8 @@ namespace Taskbarv3.UI.ViewModels
             ToggleWorkAreaCommand = new RelayCommand(OnToggleWorkAreaCommand);
             OpenSettingsCommand = new RelayCommand(OnOpenSettingsCommand);
 
-            this.Subscribe<ShortcutAddedEvent>(OnAddShortcutEvent);
-            this.Subscribe<ShortcutModifiedEvent>(OnShortcutModifiedEvent);
+            Hub.Default.Subscribe<ShortcutAddedEvent>(OnAddShortcutEvent);
+            Hub.Default.Subscribe<ShortcutModifiedEvent>(OnShortcutModifiedEvent);
             this.statusService.SetStatusAction = OnStatusChange;
             SetWorkArea();
 
