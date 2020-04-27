@@ -6,6 +6,6 @@ namespace Taskbarv3.Core.Models
     {
         public int ScreenHeight { get; set; }
         public int ScreenWidth { get; set; }
-        public Rect MonitorArea { get; set; }
+        public System.Windows.Rect MonitorArea { get; set; }
     }
 }

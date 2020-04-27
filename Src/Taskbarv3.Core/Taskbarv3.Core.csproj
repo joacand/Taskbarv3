@@ -78,7 +78,7 @@
     <Compile Include="Models\MainConfig.cs" />
     <Compile Include="Models\NativeMethods.cs" />
     <Compile Include="Models\ProcessAccessFlags.cs" />
-    <Compile Include="Models\RECT.cs" />
+    <Compile Include="Models\Rect.cs" />
     <Compile Include="Models\Shortcut.cs" />
     <Compile Include="Models\PopupWindow.cs" />
     <Compile Include="Models\ShortcutMetaData.cs" />

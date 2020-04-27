@@ -16,9 +16,9 @@ namespace Taskbarv3.Core.Services
             SPIF_SENDCHANGE = SPIF_SENDWININICHANGE
         }
 
-        public void SetWorkArea(RECT rect)
+        public void SetWorkArea(Rect rect)
         {
-            bool successful = NativeMethods.SystemParametersInfo(SPI_SETWORKAREA, 0, ref rect, (int)WinIniFlags.SPIF_UPDATEINIFILE);
+            var successful = NativeMethods.SystemParametersInfo(SPI_SETWORKAREA, 0, ref rect, (int)WinIniFlags.SPIF_UPDATEINIFILE);
 
             if (!successful)
             {
@@ -26,7 +26,7 @@ namespace Taskbarv3.Core.Services
             }
         }
 
-        public RECT GetSecondaryMonitorScreenBounds()
+        public Rect GetSecondaryMonitorScreenBounds()
         {
             var displays = NativeMethods.QueryDisplays();
             if (displays.Count < 2)
@@ -35,7 +35,7 @@ namespace Taskbarv3.Core.Services
             }
             var secondaryDisplayArea = displays[1].MonitorArea;
 
-            return new RECT
+            return new Rect
             {
                 Top = (int)secondaryDisplayArea.Top,
                 Bottom = (int)secondaryDisplayArea.Bottom,
