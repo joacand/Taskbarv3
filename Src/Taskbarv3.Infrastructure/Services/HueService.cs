@@ -51,8 +51,7 @@ namespace Taskbarv3.Infrastructure.Services
             var request = new RestRequest(user + $"/lights/{light}/state", Method.PUT);
             var body = new { on };
             request.AddJsonBody(body);
-
-            var response = client.ExecuteTaskAsync(request);
+            client.ExecuteAsync(request);
 
             return Task.FromResult(true);
         }
@@ -72,8 +71,7 @@ namespace Taskbarv3.Infrastructure.Services
             var request = new RestRequest(user + $"/lights/{light}/state", Method.PUT);
             var body = new { bri = brightnessValue };
             request.AddJsonBody(body);
-
-            var response = await client.ExecuteTaskAsync(request);
+            await client.ExecuteAsync(request);
 
             return true;
         }
@@ -89,7 +87,7 @@ namespace Taskbarv3.Infrastructure.Services
             int brightness = 0;
 
             var request = new RestRequest(user + $"/lights/{light}", Method.GET);
-            var response = await client.ExecuteTaskAsync<RootObject>(request);
+            var response = await client.ExecuteAsync<RootObject>(request);
 
             RootObject rootObject = JsonConvert.DeserializeObject<RootObject>(response.Content);
             if (rootObject == null || rootObject?.Error != null)
@@ -108,7 +106,7 @@ namespace Taskbarv3.Infrastructure.Services
             var body = new { devicetype = "taskbarv3" };
             request.AddJsonBody(body);
 
-            var response = await client.ExecuteTaskAsync<RootObject>(request);
+            var response = await client.ExecuteAsync<RootObject>(request);
 
             LinkRoot linkRoot = JsonConvert.DeserializeObject<List<LinkRoot>>(response.Content).First();
 

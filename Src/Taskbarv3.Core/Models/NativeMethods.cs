@@ -52,7 +52,7 @@ namespace Taskbarv3.Core.Models
                             ScreenWidth = monitor.Monitor.Right - monitor.Monitor.Left,
                             ScreenHeight = monitor.Monitor.Bottom - monitor.Monitor.Top
                         };
-                        displayinfo.MonitorArea = new System.Windows.Rect(
+                        displayinfo.MonitorArea = new Windows.Foundation.Rect(
                             monitor.Monitor.Left,
                             monitor.Monitor.Top,
                             displayinfo.ScreenWidth,

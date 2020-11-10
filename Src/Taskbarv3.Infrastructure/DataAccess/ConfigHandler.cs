@@ -42,11 +42,7 @@ namespace Taskbarv3.Infrastructure.DataAccess
                     LightToAffect = int.TryParse(ConfigurationManager.AppSettings["DefaultLightToAffect"], out int defaultLight)
                         ? defaultLight
                         : 0
-                },
-                SkypeWorkingDirectory = ConfigurationManager.AppSettings["SkypeWorkingDirectory"],
-                SkypeFileName = ConfigurationManager.AppSettings["SkypeFileName"],
-                SteamWorkingDirectory = ConfigurationManager.AppSettings["SteamWorkingDirectory"],
-                SteamFileName = ConfigurationManager.AppSettings["SteamFileName"],
+                }
             };
             SaveToFile(config);
             return config;

@@ -42,6 +42,8 @@ namespace Taskbarv3.Core.Models
             Process process = new Process();
             process.StartInfo.WorkingDirectory = WorkingDirectory;
             process.StartInfo.FileName = ProcessPath;
+            process.StartInfo.UseShellExecute = true;
+
             process.Start();
         }
     }

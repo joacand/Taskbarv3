@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         Title="Settings"
         Background="#282828" ResizeMode="NoResize"
-        Height="185" Width="300"
+        Height="125" Width="300"
         ShowInTaskbar="False"
         Topmost="True">
     <Grid>
@@ -16,15 +16,7 @@
             <ColumnDefinition Width="auto"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="10">
-            <Button Content="Skype and Steam" Padding="5" Margin="0,0,0,5" Width="110"
-                    Background="#202020" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0"
-                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-                    Command="{Binding StartSkypeAndSteamCommand}"></Button>
-            <Button Content="Edit favorites" Padding="5" Margin="0,0,0,5" Width="110"
-                    Background="#202020" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0"
-                    Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-                    Command="{Binding EditFavoritesCommand}"></Button>
+        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="10" VerticalAlignment="Bottom">
             <Button Content="Register Hue" Padding="5" Margin="0,0,0,5" Width="110"
                     Background="#202020" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0"
                     Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
