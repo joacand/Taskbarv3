@@ -1,6 +1,6 @@
 # Taskbarv3
 
-A lightweight taskbar alternative to be used on a secondary monitor. Developed in .NET C# WPF.
+A lightweight taskbar alternative to be used on a secondary monitor. Developed with WPF using .NET Core and .NET Standard frameworks.
 
 ## Functionality
 
