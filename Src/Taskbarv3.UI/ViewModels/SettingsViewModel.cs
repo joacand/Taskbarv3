@@ -1,12 +1,11 @@
-﻿using System.Windows.Input;
-using Taskbarv3.Core.Interfaces;
-using Taskbarv3.Core.Models;
-using Taskbarv3.UI.Models;
+﻿using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
-using System.IO;
-using System;
+using System.Windows.Input;
+using Taskbarv3.Core.Interfaces;
+using Taskbarv3.Core.Models;
+using Taskbarv3.UI.Models;
 
 namespace Taskbarv3.UI.ViewModels
 {
@@ -16,10 +15,7 @@ namespace Taskbarv3.UI.ViewModels
         private readonly IFavoritesService favoritesService;
         private readonly IStatusSetter statusSetter;
         private readonly IHueService hueService;
-        private readonly MainConfig config;
 
-        public ICommand StartSkypeAndSteamCommand { get; set; }
-        public ICommand EditFavoritesCommand { get; set; }
         public ICommand RegisterHueCommand { get; set; }
         public ICommand AboutCommand { get; set; }
         public ICommand ClearFavoritesCommand { get; set; }
@@ -27,7 +23,6 @@ namespace Taskbarv3.UI.ViewModels
 
         public SettingsViewModel(
             IWindowService windowService,
-            IConfigHandler configHandler,
             IFavoritesService favoritesService,
             IStatusSetter statusSetter,
             IHueService hueService)
@@ -36,53 +31,11 @@ namespace Taskbarv3.UI.ViewModels
             this.favoritesService = favoritesService;
             this.statusSetter = statusSetter;
             this.hueService = hueService;
-            config = configHandler.LoadFromFile();
 
-            StartSkypeAndSteamCommand = new RelayCommand(OnStartSkypeAndSteamCommand);
-            EditFavoritesCommand = new RelayCommand(OnEditFavoritesCommand);
             RegisterHueCommand = new RelayCommand(OnRegisterHueCommand);
             AboutCommand = new RelayCommand(OnAboutCommand);
             ClearFavoritesCommand = new RelayCommand(OnClearFavoritesCommand);
             ExitProgramCommand = new RelayCommand(OnExitProgramCommand);
-        }
-
-        private void OnStartSkypeAndSteamCommand(object _)
-        {
-            if (!File.Exists(config.SkypeFileName))
-            {
-                statusSetter.SetStatus($"Unable to find Skype at location: {config.SkypeFileName}");
-                Exit();
-                return;
-            }
-            if (!File.Exists(config.SteamFileName))
-            {
-                statusSetter.SetStatus($"Unable to find Steam at location: {config.SkypeFileName}");
-                Exit();
-                return;
-            }
-
-            ProcessStartInfo skypeProcessStartInfo = new ProcessStartInfo
-            {
-                WorkingDirectory = config.SkypeWorkingDirectory,
-                FileName = config.SkypeFileName
-            };
-
-            ProcessStartInfo steamProcessStartInfo = new ProcessStartInfo
-            {
-                WorkingDirectory = config.SteamWorkingDirectory,
-                FileName = config.SteamFileName
-            };
-
-            try
-            {
-                Process skypeProcess = Process.Start(skypeProcessStartInfo);
-                Process steamProcess = Process.Start(steamProcessStartInfo);
-            }
-            catch (Exception e)
-            {
-                statusSetter.SetStatus($"Exception when opening process: {e}");
-            }
-            Exit();
         }
 
         private void OnExitProgramCommand(object _)
@@ -124,11 +77,6 @@ namespace Taskbarv3.UI.ViewModels
             {
                 MessageBox.Show("Fail to register. Did you press the link button?");
             }
-        }
-
-        private void OnEditFavoritesCommand(object obj)
-        {
-            MessageBox.Show("Not implemented");
         }
 
         private void Exit()

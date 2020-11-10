@@ -1,96 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{94C3CEB9-D20B-4E69-9CD2-F598E7F5F878}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>Taskbarv3.Core</RootNamespace>
     <AssemblyName>Taskbarv3.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
+
   <ItemGroup>
     <Compile Include="..\Taskbarv3.UI\Properties\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="Extensions\DateTimeExtensions.cs" />
-    <Compile Include="Interfaces\ICpuUsageService.cs" />
-    <Compile Include="Interfaces\IEvent.cs" />
-    <Compile Include="Interfaces\IShortcutsHandler.cs" />
-    <Compile Include="Interfaces\IFavoritesService.cs" />
-    <Compile Include="Interfaces\IConfigHandler.cs" />
-    <Compile Include="Interfaces\IFileHandler.cs" />
-    <Compile Include="Interfaces\IHueService.cs" />
-    <Compile Include="Interfaces\IMediaControlService.cs" />
-    <Compile Include="Interfaces\ISongViewerService.cs" />
-    <Compile Include="Interfaces\IStatusService.cs" />
-    <Compile Include="Interfaces\IStatusSetter.cs" />
-    <Compile Include="Interfaces\IWindowService.cs" />
-    <Compile Include="Interfaces\IWorkAreaService.cs" />
-    <Compile Include="Interfaces\IMaxRequestsGuard.cs" />
-    <Compile Include="Models\DisplayInfo.cs" />
-    <Compile Include="Models\Events\ShortcutModifiedEvent.cs" />
-    <Compile Include="Models\Events\ShortcutAddedEvent.cs" />
-    <Compile Include="Models\HueConfig.cs" />
-    <Compile Include="Models\Hue\Error.cs" />
-    <Compile Include="Models\Hue\LinkRoot.cs" />
-    <Compile Include="Models\Hue\RootObject.cs" />
-    <Compile Include="Models\Hue\State.cs" />
-    <Compile Include="Models\Hue\Success.cs" />
-    <Compile Include="Models\Hue\Swupdate.cs" />
-    <Compile Include="Models\MainConfig.cs" />
-    <Compile Include="Models\NativeMethods.cs" />
-    <Compile Include="Models\ProcessAccessFlags.cs" />
-    <Compile Include="Models\Rect.cs" />
-    <Compile Include="Models\Shortcut.cs" />
-    <Compile Include="Models\PopupWindow.cs" />
-    <Compile Include="Models\ShortcutMetaData.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\CpuUsageService.cs" />
-    <Compile Include="Services\FavoritesService.cs" />
-    <Compile Include="Services\MediaControlService.cs" />
-    <Compile Include="Services\SongViewerService.cs" />
-    <Compile Include="Services\WorkAreaService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="5.0.0" />
+    <PackageReference Include="System.Runtime.WindowsRuntime" Version="4.7.0" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
