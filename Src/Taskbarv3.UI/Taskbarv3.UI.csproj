@@ -6,6 +6,7 @@
     <AssemblyName>Taskbarv3.UI</AssemblyName>
     <UseWPF>true</UseWPF>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <ApplicationIcon>taskbarv3.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
