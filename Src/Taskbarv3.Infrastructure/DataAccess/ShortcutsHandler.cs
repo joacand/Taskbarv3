@@ -8,39 +8,38 @@ using Taskbarv3.Core.Models;
 
 namespace Taskbarv3.Infrastructure.DataAccess
 {
-    public class ShortcutsHandler : IShortcutsHandler
+    public class ShortcutsHandler : DataHandler, IShortcutsHandler
     {
-        private static readonly string shortcutPath = ConfigurationManager.AppSettings["ShortcutsName"];
+        private static readonly string shortcutPath =
+            Path.Join(ApplicationSettingsDirectory, ConfigurationManager.AppSettings["ShortcutsName"]);
 
         public void SaveToFile(IEnumerable<Shortcut> shortcutsData)
         {
-            using (StreamWriter file = File.CreateText(shortcutPath))
+            using StreamWriter file = File.CreateText(shortcutPath);
+            JsonSerializer serializer = new JsonSerializer()
             {
-                JsonSerializer serializer = new JsonSerializer()
-                {
-                    Formatting = Formatting.Indented
-                };
-                serializer.Serialize(file, shortcutsData);
-            }
+                Formatting = Formatting.Indented
+            };
+            serializer.Serialize(file, shortcutsData);
         }
 
         public IEnumerable<Shortcut> LoadFromFile()
         {
-            if (File.Exists(shortcutPath))
+            if (!File.Exists(shortcutPath))
             {
-                var shortCuts = JsonConvert.DeserializeObject<List<Shortcut>>(File.ReadAllText(shortcutPath));
-                var shortcutsModified = ConvertShortcutsIfNeededVersionOne(shortCuts);
-
-                shortCuts.OrderBy(x => x.Index);
-
-                if (shortcutsModified)
-                {
-                    SaveToFile(shortCuts);
-                }
-
-                return shortCuts;
+                CreateDirectory();
+                return new List<Shortcut>();
             }
-            return new List<Shortcut>(); ;
+
+            var shortcuts = JsonConvert.DeserializeObject<List<Shortcut>>(File.ReadAllText(shortcutPath));
+            var shortcutsModified = ConvertShortcutsIfNeededVersionOne(shortcuts);
+
+            if (shortcutsModified)
+            {
+                SaveToFile(shortcuts);
+            }
+
+            return shortcuts;
         }
 
         /// <summary>

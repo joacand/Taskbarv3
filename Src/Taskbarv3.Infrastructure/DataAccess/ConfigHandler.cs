@@ -6,34 +6,32 @@ using Taskbarv3.Core.Models;
 
 namespace Taskbarv3.Infrastructure.DataAccess
 {
-    public class ConfigHandler : IConfigHandler
+    public class ConfigHandler : DataHandler, IConfigHandler
     {
-        private static readonly string configPath = ConfigurationManager.AppSettings["TaskbarConfigName"];
+        private static readonly string configPath =
+            Path.Join(ApplicationSettingsDirectory, ConfigurationManager.AppSettings["TaskbarConfigName"]);
 
         public void SaveToFile(MainConfig config)
         {
-            using (StreamWriter file = File.CreateText(configPath))
+            using StreamWriter file = File.CreateText(configPath);
+            JsonSerializer serializer = new JsonSerializer()
             {
-                JsonSerializer serializer = new JsonSerializer()
-                {
-                    Formatting = Formatting.Indented
-                };
-                serializer.Serialize(file, config);
-            }
+                Formatting = Formatting.Indented
+            };
+            serializer.Serialize(file, config);
         }
 
         public MainConfig LoadFromFile()
         {
-            if (!File.Exists(configPath))
-            {
-                return CreateFresh();
-            }
-            return JsonConvert.DeserializeObject<MainConfig>(File.ReadAllText(configPath));
+            return File.Exists(configPath)
+                ? JsonConvert.DeserializeObject<MainConfig>(File.ReadAllText(configPath))
+                : CreateFresh();
         }
 
         private MainConfig CreateFresh()
         {
-            MainConfig config = new MainConfig
+            CreateDirectory();
+            var config = new MainConfig
             {
                 HueConfig = new HueConfig
                 {
