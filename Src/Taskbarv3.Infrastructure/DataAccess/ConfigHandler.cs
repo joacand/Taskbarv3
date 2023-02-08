@@ -40,7 +40,8 @@ namespace Taskbarv3.Infrastructure.DataAccess
                     LightToAffect = int.TryParse(ConfigurationManager.AppSettings["DefaultLightToAffect"], out int defaultLight)
                         ? defaultLight
                         : 0
-                }
+                },
+                CpuMonitorDisabled = false
             };
             SaveToFile(config);
             return config;

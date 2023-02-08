@@ -48,7 +48,7 @@ namespace Taskbarv3.Infrastructure.Services
                 return Task.FromResult(false);
             }
             requestGuard.WaitUntilFreeSlots();
-            var request = new RestRequest(user + $"/lights/{light}/state", Method.PUT);
+            var request = new RestRequest(user + $"/lights/{light}/state", Method.Put);
             var body = new { on };
             request.AddJsonBody(body);
             client.ExecuteAsync(request);
@@ -68,7 +68,7 @@ namespace Taskbarv3.Infrastructure.Services
 
             int brightnessValue = (int)(255 * (dimValue / 100.0));
 
-            var request = new RestRequest(user + $"/lights/{light}/state", Method.PUT);
+            var request = new RestRequest(user + $"/lights/{light}/state", Method.Put);
             var body = new { bri = brightnessValue };
             request.AddJsonBody(body);
             await client.ExecuteAsync(request);
@@ -86,7 +86,7 @@ namespace Taskbarv3.Infrastructure.Services
             requestGuard.WaitUntilFreeSlots();
             int brightness = 0;
 
-            var request = new RestRequest(user + $"/lights/{light}", Method.GET);
+            var request = new RestRequest(user + $"/lights/{light}", Method.Get);
             var response = await client.ExecuteAsync<RootObject>(request);
 
             RootObject rootObject = JsonConvert.DeserializeObject<RootObject>(response.Content);
@@ -102,7 +102,7 @@ namespace Taskbarv3.Infrastructure.Services
 
         public async Task<bool> RegisterAccount()
         {
-            var request = new RestRequest(Method.POST);
+            var request = new RestRequest("", Method.Post);
             var body = new { devicetype = "taskbarv3" };
             request.AddJsonBody(body);
 
