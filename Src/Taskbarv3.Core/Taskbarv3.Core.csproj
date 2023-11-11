@@ -13,7 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.2</Version>
+      <Version>13.0.3</Version>
     </PackageReference>
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
     <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="7.0.0" />
