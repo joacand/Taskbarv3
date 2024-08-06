@@ -10,7 +10,7 @@ namespace Taskbarv3.Core.Services
     {
         private readonly MainConfig config;
         private PerformanceCounter cpuCounter;
-        private bool initialized;
+        private bool Initialized => cpuCounter != null;
 
         public CpuUsageService(IConfigHandler configHandler)
         {
@@ -21,18 +21,22 @@ namespace Taskbarv3.Core.Services
                 // PerformanceCounter can have a slow start-up time - start in a separate thread
                 Task.Run(() =>
                 {
-                    cpuCounter = new PerformanceCounter("Processor Information", "% Processor Time", "_Total");
-                    cpuCounter.NextValue();
-                    initialized = true;
+                    if (OperatingSystem.IsWindows())
+                    {
+                        cpuCounter = new PerformanceCounter("Processor Information", "% Processor Time", "_Total");
+                        cpuCounter.NextValue();
+                    }
                 });
             }
         }
 
-        public int NextValue => !initialized ? 0 : (int)Math.Round(cpuCounter.NextValue());
+#pragma warning disable CA1416 // Validate platform compatibility
+        public int NextValue => !Initialized ? 0 : (int)Math.Round(cpuCounter.NextValue());
+#pragma warning restore CA1416 // Validate platform compatibility
 
         public void Dispose()
         {
-            cpuCounter.Dispose();
+            cpuCounter?.Dispose();
         }
     }
 }

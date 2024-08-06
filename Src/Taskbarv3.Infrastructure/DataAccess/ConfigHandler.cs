@@ -14,7 +14,7 @@ namespace Taskbarv3.Infrastructure.DataAccess
         public void SaveToFile(MainConfig config)
         {
             using StreamWriter file = File.CreateText(configPath);
-            JsonSerializer serializer = new JsonSerializer()
+            JsonSerializer serializer = new()
             {
                 Formatting = Formatting.Indented
             };

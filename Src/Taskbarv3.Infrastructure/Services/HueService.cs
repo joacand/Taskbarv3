@@ -1,21 +1,22 @@
 ﻿using Newtonsoft.Json;
-using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 using Taskbarv3.Core.Interfaces;
 using Taskbarv3.Core.Models;
 using Taskbarv3.Core.Models.Hue;
-using System.Threading.Tasks;
 
 namespace Taskbarv3.Infrastructure.Services
 {
     public class HueService : IHueService
     {
-        private string user = "";
+        private string user = string.Empty;
         private bool HasUser => !string.IsNullOrWhiteSpace(user);
-        private readonly RestClient client;
-        private readonly MaxRequestsGuard requestGuard = new MaxRequestsGuard();
+        private static HttpClient client;
+        private readonly MaxRequestsGuard requestGuard = new();
         private readonly string baseUrl;
         private readonly MainConfig config;
         private readonly IConfigHandler configHandler;
@@ -25,7 +26,10 @@ namespace Taskbarv3.Infrastructure.Services
             this.configHandler = configHandler;
             config = configHandler.LoadFromFile();
             baseUrl = config.HueConfig.BridgeUrl;
-            client = new RestClient(baseUrl);
+            client = new HttpClient
+            {
+                BaseAddress = new Uri(baseUrl)
+            };
 
             TryLoadUser();
         }
@@ -40,20 +44,21 @@ namespace Taskbarv3.Infrastructure.Services
             return false;
         }
 
-        public Task<bool> PowerLight(bool on)
+        public async Task<bool> PowerLight(bool on)
         {
             var light = config.HueConfig.LightToAffect;
             if (!HasUser)
             {
-                return Task.FromResult(false);
+                return false;
             }
             requestGuard.WaitUntilFreeSlots();
-            var request = new RestRequest(user + $"/lights/{light}/state", Method.Put);
-            var body = new { on };
-            request.AddJsonBody(body);
-            client.ExecuteAsync(request);
 
-            return Task.FromResult(true);
+            var url = $"{user}/lights/{light}/state";
+            var jsonBody = JsonConvert.SerializeObject(new { on });
+            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+            _ = await client.PutAsync(url, content);
+
+            return true;
         }
 
         /// <param name="dimValue">Procentage 0-100</param>
@@ -66,12 +71,12 @@ namespace Taskbarv3.Infrastructure.Services
             }
             requestGuard.WaitUntilFreeSlots();
 
-            int brightnessValue = (int)(255 * (dimValue / 100.0));
+            var brightnessValue = (int)(255 * (dimValue / 100.0));
 
-            var request = new RestRequest(user + $"/lights/{light}/state", Method.Put);
-            var body = new { bri = brightnessValue };
-            request.AddJsonBody(body);
-            await client.ExecuteAsync(request);
+            var url = $"{user}/lights/{light}/state";
+            var jsonBody = JsonConvert.SerializeObject(new { bri = brightnessValue });
+            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+            _ = await client.PutAsync(url, content);
 
             return true;
         }
@@ -84,31 +89,37 @@ namespace Taskbarv3.Infrastructure.Services
                 return 0;
             }
             requestGuard.WaitUntilFreeSlots();
-            int brightness = 0;
 
-            var request = new RestRequest(user + $"/lights/{light}", Method.Get);
-            var response = await client.ExecuteAsync<RootObject>(request);
+            var url = $"{user}/lights/{light}";
+            var response = await client.GetAsync(url);
+            var content = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrWhiteSpace(content)) { return 0; }
 
-            RootObject rootObject = JsonConvert.DeserializeObject<RootObject>(response.Content);
+            var rootObject = content.StartsWith('[')
+               ? JsonConvert.DeserializeObject<List<RootObject>>(content)?.FirstOrDefault()
+               : JsonConvert.DeserializeObject<RootObject>(content);
+
             if (rootObject == null || rootObject?.Error != null)
             {
                 return 0;
             }
 
-            brightness = (int)Math.Round(((double)rootObject.State.Bri / 255) * 100);
+            var brightness = (int)Math.Round((double)rootObject.State.Bri / 255 * 100);
 
             return brightness;
         }
 
         public async Task<bool> RegisterAccount()
         {
-            var request = new RestRequest("", Method.Post);
-            var body = new { devicetype = "taskbarv3" };
-            request.AddJsonBody(body);
+            var jsonBody = JsonConvert.SerializeObject(new { devicetype = "taskbarv3" });
+            var requestContent = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+            var response = await client.PostAsync("", requestContent);
+            var content = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrWhiteSpace(content)) { return false; }
 
-            var response = await client.ExecuteAsync<RootObject>(request);
-
-            LinkRoot linkRoot = JsonConvert.DeserializeObject<List<LinkRoot>>(response.Content).First();
+            var linkRoot = content.StartsWith('[')
+               ? JsonConvert.DeserializeObject<List<LinkRoot>>(content)?.FirstOrDefault()
+               : JsonConvert.DeserializeObject<LinkRoot>(content);
 
             if (linkRoot?.Error == null)
             {

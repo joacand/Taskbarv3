@@ -12,7 +12,12 @@
     <Copyright>Copyright 2023</Copyright>
     <Authors>Joacand</Authors>
     <LangVersion>9.0</LangVersion>
+    <StartupObject>Taskbarv3.UI.App</StartupObject>
   </PropertyGroup>
+  <ItemGroup>
+    <ApplicationDefinition Remove="App.xaml" />
+    <Page Include="App.xaml" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
@@ -31,11 +36,10 @@
     <Resource Include="Resources\transparent.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
     <PackageReference Include="PubSub">
       <Version>4.0.2</Version>
-    </PackageReference>
-    <PackageReference Include="Unity">
-      <Version>5.11.10</Version>
     </PackageReference>
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>

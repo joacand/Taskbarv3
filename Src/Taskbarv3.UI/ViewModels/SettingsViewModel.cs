@@ -45,38 +45,50 @@ namespace Taskbarv3.UI.ViewModels
 
         private void OnAboutCommand(object _)
         {
-            var fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-            var name = fileVersionInfo.ProductName;
-            var version = fileVersionInfo.FileVersion;
+            try
+            {
+                var fileVersionInfo = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+                var name = fileVersionInfo.ProductName;
+                var version = fileVersionInfo.FileVersion;
 
-            var msg = $"{name} version {version}\n" +
-                $"\nTo be used on a second monitor as a second taskbar.\n" +
-                $"\nDeveloped by Joacand\nProject started 2013-09-14\n";
-            MessageBox.Show(msg);
+                var msg = $"{name} version {version}\n" +
+                    $"\nTo be used on a second monitor as a second taskbar.\n" +
+                    $"\nDeveloped by Joacand\nProject started 2013-09-14\n";
+                MessageBox.Show(msg);
+            }
+            catch { }
         }
 
         private void OnClearFavoritesCommand(object obj)
         {
-            favoritesService.ClearFavorites();
-            statusSetter.SetStatus("Playlist cleared");
-            Exit();
+            try
+            {
+                favoritesService.ClearFavorites();
+                statusSetter.SetStatus("Playlist cleared");
+                Exit();
+            }
+            catch { }
         }
 
         private async void OnRegisterHueCommand(object obj)
         {
-            MessageBox.Show("Press the link button on your HUE bridge, then press OK");
-
-            var successful = await hueService.RegisterAccount();
-
-            if (successful)
+            try
             {
-                MessageBox.Show("Registration successful");
-                statusSetter.SetStatus("Registration successful");
+                MessageBox.Show("Press the link button on your HUE bridge, then press OK");
+
+                var successful = await hueService.RegisterAccount();
+
+                if (successful)
+                {
+                    MessageBox.Show("Registration successful");
+                    statusSetter.SetStatus("Registration successful");
+                }
+                else
+                {
+                    MessageBox.Show("Fail to register. Did you press the link button?");
+                }
             }
-            else
-            {
-                MessageBox.Show("Fail to register. Did you press the link button?");
-            }
+            catch { }
         }
 
         private void Exit()
