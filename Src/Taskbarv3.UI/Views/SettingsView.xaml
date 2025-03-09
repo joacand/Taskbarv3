@@ -5,37 +5,57 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Settings"
-        Background="#282828" ResizeMode="NoResize"
-        Height="125" Width="300"
+        Background="#202020"        
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        Height="105" Width="260"
         ShowInTaskbar="False"
         Topmost="True">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="auto"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="10" VerticalAlignment="Bottom">
-            <Button Content="Register Hue" Padding="5" Margin="0,0,0,5" Width="110"
-                    Background="#202020" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0"
+        <Button Content="X"
+                Width="20"
+                Height="20"
+                FontSize="12"
+                FontWeight="Bold"
+                Background="Transparent"
+                Foreground="WhiteSmoke"
+                BorderBrush="Transparent"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Click="CloseWindow"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Column="0" Orientation="Vertical" Margin="10" VerticalAlignment="Bottom">
+                <Button Content="Register Hue" Padding="5" Margin="0,0,0,5" Width="110"
+                    Background="#282828" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0"
                     Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                     Command="{Binding RegisterHueCommand}"></Button>
-            <Button Content="About" Padding="5" Margin="0,0,0,5" Width="110"
-                    Background="#202020" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0"
+                <Button Content="About" Padding="5" Margin="0,0,0,5" Width="110"
+                    Background="#282828" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0"
                     Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                     Command="{Binding AboutCommand}"></Button>
-        </StackPanel>
+            </StackPanel>
 
-        <StackPanel Grid.Column="2" Orientation="Vertical" Margin="10" VerticalAlignment="Bottom">
-            <Button Content="Clear favorites" Padding="5" Margin="0,0,0,5" Width="110"
-                    Background="#202020" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0"
+            <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10" VerticalAlignment="Bottom">
+                <Button Content="Clear favorites" Padding="5" Margin="0,0,0,5" Width="110"
+                    Background="#282828" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0"
                     Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                     Command="{Binding ClearFavoritesCommand}"></Button>
-            <Button Content="Exit program" Padding="5" Margin="0,0,0,5" Width="110"
-                    Background="#202020" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0"
+                <Button Content="Exit program" Padding="5" Margin="0,0,0,5" Width="110"
+                    Background="#282828" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0"
                     Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                     Command="{Binding ExitProgramCommand}"></Button>
-        </StackPanel>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>
