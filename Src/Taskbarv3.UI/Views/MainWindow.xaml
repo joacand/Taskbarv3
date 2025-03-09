@@ -11,10 +11,12 @@
         Opacity="0.95" 
         Top="{Binding Top, Source={x:Static properties:Settings.Default}, Mode=TwoWay}" 
         Left="{Binding Left, Source={x:Static properties:Settings.Default}, Mode=TwoWay}"
-        Background="#282828" AllowsTransparency="True"
+        Background="#202020" AllowsTransparency="True"
         Topmost="True"
         UseLayoutRounding="True"
-        RenderOptions.BitmapScalingMode="Linear"
+        RenderOptions.BitmapScalingMode="HighQuality"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
         ShowInTaskbar="False">
     <Window.Resources>
         <ImageBrush x:Key="SettingsImage" ImageSource="../Resources/settings.png"/>
@@ -55,7 +57,7 @@
                 <Button DockPanel.Dock="Left" Margin="2" BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                         Command="{Binding OpenSettingsCommand}">
                     <Button.Content>
-                        <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="22" Height="22">
+                        <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="18" Height="18">
                             <TextBlock.Background>
                                 <StaticResource ResourceKey="SettingsImage"/>
                             </TextBlock.Background>
@@ -65,7 +67,7 @@
                 <Button DockPanel.Dock="Right" Margin="0,2,2,2" BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                         Command="{Binding ToggleWorkAreaCommand}">
                     <Button.Content>
-                        <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="22" Height="22">
+                        <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="18" Height="18">
                             <TextBlock.Background>
                                 <StaticResource ResourceKey="ScreenImage"/>
                             </TextBlock.Background>
@@ -77,9 +79,11 @@
                 <ProgressBar Margin="3" Height="13" Background="#404040" BorderThickness="0" Value="{Binding CpuProgressBarValue}"></ProgressBar>
             </DockPanel>
         </Grid>
-        <StackPanel Orientation="Horizontal" Grid.Column="1">
-            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="Gray" />
-        </StackPanel>
+
+        <Rectangle Grid.Column="1" 
+                   Width="1" 
+                   Fill="#444444" 
+                   VerticalAlignment="Stretch"/>
 
         <!-- Shortcuts -->
         <DockPanel Grid.Column="2" LastChildFill="False">
@@ -147,9 +151,10 @@
 
         <!-- Control buttons -->
         <DockPanel LastChildFill="False" Grid.Column="4" HorizontalAlignment="Center">
-            <StackPanel Orientation="Horizontal" Grid.Column="1">
-                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="Gray" />
-            </StackPanel>
+            <Rectangle Grid.Column="1" 
+                   Width="1" 
+                   Fill="#444444" 
+                   VerticalAlignment="Stretch"/>
             <Grid DockPanel.Dock="Left" Margin="0,0,10,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"></ColumnDefinition>
@@ -169,8 +174,17 @@
                         </TextBlock>
                     </Button.Content>
                 </Button>
-                <Button Grid.Row="1" Grid.Column="0" Width="18" Height="18" Content="P"  BorderThickness="0" Background="#282828"  Foreground="WhiteSmoke"
-                        Command="{Binding PlayFavoritesCommand}"></Button>
+
+                <Button Grid.Row="1" Grid.Column="0" 
+                        Content="P" 
+                        FontSize="10"
+                        FontWeight="Bold"
+                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                        Foreground="WhiteSmoke"
+                        Background="Transparent"
+                        ToolTip="Play Favorites"
+                        Width="18" Height="18"
+                        Command="{Binding PlayFavoritesCommand}"/>
                 <Button Grid.Row="0" Grid.Column="1" Width="24" Height="24"  BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                         Command="{Binding SkipCommand}">
                     <Button.Content>
@@ -181,13 +195,30 @@
                         </TextBlock>
                     </Button.Content>
                 </Button>
-                <Button Grid.Row="1" Grid.Column="1" Width="18" Height="18" Content="A" BorderThickness="0"  Background="#282828" Foreground="WhiteSmoke"
-                        Command="{Binding AddToFavoritesCommand}"></Button>
+
+                <Button Grid.Row="1" Grid.Column="1" 
+                        Content="A" 
+                        FontSize="10"
+                        FontWeight="Bold"
+                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                        Foreground="WhiteSmoke"
+                        Background="Transparent"
+                        ToolTip="Play Favorites"
+                        Width="18" Height="18"
+                        Command="{Binding AddToFavoritesCommand}"/>
             </Grid>
 
-            <!-- Date text -->
-            <TextBlock DockPanel.Dock="Right" Text="{Binding DateText}" Foreground="WhiteSmoke" Margin="0,0,10,0"
-                       FontSize="11.5" FontFamily="Segoe UI" HorizontalAlignment="Center" TextAlignment="Center"></TextBlock>
+            <TextBlock Grid.Column="2" 
+                      Text="{Binding DateText}" 
+                      
+                      Foreground="WhiteSmoke" 
+                      Margin="0,0,10,0"
+                      FontSize="12"
+                      FontWeight="SemiBold"
+                      FontFamily="Segoe UI" 
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Right"
+                      TextAlignment="Right"/>
         </DockPanel>
     </Grid>
 </Window>

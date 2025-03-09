@@ -5,44 +5,65 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Add shortcut"
-        Background="#282828" ResizeMode="NoResize"
-        Width="256" Height="245"
+        Background="#202020"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        Width="256" Height="220"
         ShowInTaskbar="False"
         Topmost="True">
     <Grid>
-        <StackPanel Margin="10">
-            <Label Content="Name:" Foreground="White"></Label>
-            <TextBox Text="{Binding ShortcutName, Mode=TwoWay}"></TextBox>
-            <Label Content="Path to executable/directory:" Foreground="White" Margin="0,5,0,0"></Label>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="auto"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <TextBox Text="{Binding ShortcutPath, Mode=TwoWay}" Grid.Column="0" Margin="0,0,5,0"></TextBox>
-                <Button Grid.Column="1" Content="Browse" Width="60" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-                        Background="#202020" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0" Padding="3"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Button Content="X"
+                Width="20"
+                Height="20"
+                FontSize="12"
+                FontWeight="Bold"
+                Background="Transparent"
+                Foreground="WhiteSmoke"
+                BorderBrush="Transparent"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Click="CloseWindow"/>
+
+        <Grid Grid.Row="1">
+            <StackPanel Margin="10,0,10,10">
+                <Label Content="Name:" Foreground="White"></Label>
+                <TextBox Text="{Binding ShortcutName, Mode=TwoWay}"></TextBox>
+                <Label Content="Path to executable/directory:" Foreground="White" Margin="0,5,0,0"></Label>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Text="{Binding ShortcutPath, Mode=TwoWay}" Grid.Column="0" Margin="0,0,5,0"></TextBox>
+                    <Button Grid.Column="1" Content="Browse" Width="60" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                        Background="#282828" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0" Padding="3"
                         Command="{Binding BrowsePathCommand}"></Button>
-            </Grid>
-            <Label Content="Icon path:" Foreground="White" Margin="0,5,0,0"></Label>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="auto"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <TextBox Text="{Binding ShortcutIconPath, Mode=TwoWay}" Grid.Column="0" Margin="0,0,5,0"></TextBox>
-                <Button Grid.Column="1" Content="Browse" Width="60" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-                        Background="#202020" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0" Padding="3"
+                </Grid>
+                <Label Content="Icon path:" Foreground="White" Margin="0,5,0,0"></Label>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Text="{Binding ShortcutIconPath, Mode=TwoWay}" Grid.Column="0" Margin="0,0,5,0"></TextBox>
+                    <Button Grid.Column="1" Content="Browse" Width="60" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                        Background="#282828" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0" Padding="3"
                         Command="{Binding BrowseIconCommand}"></Button>
-            </Grid>
-            <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
-                <Button Content="Ok" Margin="0,0,5,0" Width="60" Command="{Binding OkCommand}"
-                        Background="#202020" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0" Padding="3"
+                </Grid>
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                    <Button Content="Ok" Margin="0,0,5,0" Width="60" Command="{Binding OkCommand}"
+                        Background="#282828" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0" Padding="3"
                         Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"></Button>
-                <Button Content="Cancel" Width="60" Command="{Binding CancelCommand}"
-                        Background="#202020" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0" Padding="3"
+                    <Button Content="Cancel" Width="60" Command="{Binding CancelCommand}"
+                        Background="#282828" Foreground="WhiteSmoke" FontSize="12" FontFamily="Segoe UI" BorderThickness="0" Padding="3"
                         Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"></Button>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
+        </Grid>
     </Grid>
 </Window>
