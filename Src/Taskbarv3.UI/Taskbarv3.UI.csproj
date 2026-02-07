@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>Taskbarv3.UI</RootNamespace>
     <AssemblyName>Taskbarv3.UI</AssemblyName>
@@ -9,10 +9,11 @@
     <ApplicationIcon>taskbarv3.ico</ApplicationIcon>
     <Description>A lightweight taskbar alternative to be used on a secondary monitor</Description>
     <Company>Joacand</Company>
-    <Copyright>Copyright 2023</Copyright>
+    <Copyright>Copyright 2026</Copyright>
     <Authors>Joacand</Authors>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>latest</LangVersion>
     <StartupObject>Taskbarv3.UI.App</StartupObject>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <ApplicationDefinition Remove="App.xaml" />
@@ -36,12 +37,11 @@
     <Resource Include="Resources\transparent.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.2" />
     <PackageReference Include="PubSub">
       <Version>4.0.2</Version>
     </PackageReference>
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Taskbarv3.Core\Taskbarv3.Core.csproj" />

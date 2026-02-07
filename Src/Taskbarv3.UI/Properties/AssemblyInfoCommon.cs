@@ -5,7 +5,7 @@
 // associated with an assembly.
 [assembly: AssemblyCompany("joacand")]
 [assembly: AssemblyProduct("Taskbarv3")]
-[assembly: AssemblyCopyright("Copyright © 2024")]
+[assembly: AssemblyCopyright("Copyright © 2026")]
 
 // Version information for an assembly consists of the following four values:
 //
