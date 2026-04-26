@@ -9,7 +9,7 @@ namespace Taskbarv3.Core.Models
     {
         public string Name { get; set; }
         public string ProcessPath { get; set; }
-        public string IconPath { get; set; }
+        public string? IconPath { get; set; }
         public string WorkingDirectory { get; set; }
         public int Index { get; set; }
         public int Version { get; set; }
@@ -39,7 +39,18 @@ namespace Taskbarv3.Core.Models
 
         private void OnOpenProcess()
         {
-            Process process = new Process();
+            if (ProcessPath.StartsWith("shell:AppsFolder"))
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = ProcessPath,
+                    UseShellExecute = true
+                });
+                return;
+            }
+
+            Process process = new();
+
             process.StartInfo.WorkingDirectory = WorkingDirectory;
             process.StartInfo.FileName = ProcessPath;
             process.StartInfo.UseShellExecute = true;
