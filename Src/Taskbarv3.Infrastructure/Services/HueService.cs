@@ -16,7 +16,7 @@ namespace Taskbarv3.Infrastructure.Services
     {
         private string user = string.Empty;
         private bool HasUser => !string.IsNullOrWhiteSpace(user);
-        private static HttpClient client;
+        private readonly HttpClient client;
         private readonly MaxRequestsGuard requestGuard = new();
         private readonly string baseUrl;
         private readonly MainConfig config;
@@ -26,7 +26,8 @@ namespace Taskbarv3.Infrastructure.Services
         {
             this.configHandler = configHandler;
             config = configHandler.LoadFromFile();
-            baseUrl = config.HueConfig.BridgeUrl;
+            baseUrl = config.HueConfig?.BridgeUrl
+                ?? throw new InvalidOperationException("Bridge URL is not configured.");
             client = new HttpClient
             {
                 BaseAddress = new Uri(baseUrl)
@@ -38,7 +39,7 @@ namespace Taskbarv3.Infrastructure.Services
 
         private bool TryLoadUser()
         {
-            if (!string.IsNullOrWhiteSpace(config.HueConfig.HueUser))
+            if (!string.IsNullOrWhiteSpace(config.HueConfig!.HueUser))
             {
                 user = config.HueConfig.HueUser;
                 return true;
@@ -48,7 +49,7 @@ namespace Taskbarv3.Infrastructure.Services
 
         public async Task<bool> PowerLight(bool on)
         {
-            var light = config.HueConfig.LightToAffect;
+            var light = config.HueConfig!.LightToAffect;
             if (!HasUser)
             {
                 return false;
@@ -66,7 +67,7 @@ namespace Taskbarv3.Infrastructure.Services
         /// <param name="dimValue">Procentage 0-100</param>
         public async Task<bool> DimLight(int dimValue)
         {
-            var light = config.HueConfig.LightToAffect;
+            var light = config.HueConfig!.LightToAffect;
             if (dimValue < 0 || dimValue > 100 || !HasUser)
             {
                 return false;
@@ -85,7 +86,7 @@ namespace Taskbarv3.Infrastructure.Services
 
         public async Task<int> GetBrightnessProcentage()
         {
-            var light = config.HueConfig.LightToAffect;
+            var light = config.HueConfig!.LightToAffect;
             if (!HasUser)
             {
                 return 0;
@@ -101,12 +102,12 @@ namespace Taskbarv3.Infrastructure.Services
                ? JsonConvert.DeserializeObject<List<RootObject>>(content)?.FirstOrDefault()
                : JsonConvert.DeserializeObject<RootObject>(content);
 
-            if (rootObject == null || rootObject?.Error != null)
+            if (rootObject is null || rootObject.Error is not null)
             {
                 return 0;
             }
 
-            var brightness = (int)Math.Round((double)rootObject.State.Bri / 255 * 100);
+            var brightness = (int)Math.Round((double)rootObject.State!.Bri / 255 * 100);
 
             return brightness;
         }
@@ -123,7 +124,7 @@ namespace Taskbarv3.Infrastructure.Services
                ? JsonConvert.DeserializeObject<List<LinkRoot>>(content)?.FirstOrDefault()
                : JsonConvert.DeserializeObject<LinkRoot>(content);
 
-            if (linkRoot?.Error == null)
+            if (linkRoot?.Success?.Username is not null && linkRoot.Error is null)
             {
                 user = linkRoot.Success.Username;
                 SaveUserToConfig(linkRoot.Success.Username);
@@ -134,7 +135,7 @@ namespace Taskbarv3.Infrastructure.Services
 
         private void SaveUserToConfig(string user)
         {
-            config.HueConfig.HueUser = user;
+            config.HueConfig!.HueUser = user;
             configHandler.SaveToFile(config);
         }
     }

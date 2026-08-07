@@ -1,18 +1,10 @@
 ﻿namespace Taskbarv3.Core.Models
 {
-    public class ShortcutMetaData
+    public class ShortcutMetaData(string name, string processPath, string? iconPath, string workingDirectory)
     {
-        public string Name { get; set; }
-        public string ProcessPath { get; set; }
-        public string IconPath { get; set; }
-        public string WorkingDirectory { get; set; }
-
-        public ShortcutMetaData(string name, string processPath, string iconPath, string workingDirectory)
-        {
-            Name = name;
-            ProcessPath = processPath;
-            IconPath = iconPath;
-            WorkingDirectory = workingDirectory;
-        }
+        public string Name { get; set; } = name;
+        public string ProcessPath { get; set; } = processPath;
+        public string? IconPath { get; set; } = iconPath;
+        public string WorkingDirectory { get; set; } = workingDirectory;
     }
 }

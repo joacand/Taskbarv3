@@ -19,7 +19,7 @@ namespace Taskbarv3.Core.Models
         [JsonIgnore]
         public static int CurrentVersion = 1;
 
-        public Shortcut(string name, string processPath, string iconPath, string workingDirectory, int index, int version)
+        public Shortcut(string name, string processPath, string? iconPath, string workingDirectory, int index, int version)
         {
             Name = File.Exists(iconPath)
                 ? string.Empty

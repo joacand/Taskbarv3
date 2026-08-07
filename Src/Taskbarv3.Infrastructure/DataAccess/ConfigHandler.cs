@@ -23,9 +23,10 @@ namespace Taskbarv3.Infrastructure.DataAccess
 
         public MainConfig LoadFromFile()
         {
-            return File.Exists(configPath)
+            return (File.Exists(configPath)
                 ? JsonConvert.DeserializeObject<MainConfig>(File.ReadAllText(configPath))
-                : CreateFresh();
+                : CreateFresh())
+                ?? CreateFresh();
         }
 
         private MainConfig CreateFresh()

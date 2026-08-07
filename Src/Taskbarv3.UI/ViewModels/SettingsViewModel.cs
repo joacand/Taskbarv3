@@ -38,12 +38,12 @@ namespace Taskbarv3.UI.ViewModels
             ExitProgramCommand = new RelayCommand(OnExitProgramCommand);
         }
 
-        private void OnExitProgramCommand(object _)
+        private void OnExitProgramCommand(object? _)
         {
             Application.Current.Shutdown();
         }
 
-        private void OnAboutCommand(object _)
+        private void OnAboutCommand(object? _)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace Taskbarv3.UI.ViewModels
             catch { }
         }
 
-        private void OnClearFavoritesCommand(object obj)
+        private void OnClearFavoritesCommand(object? obj)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace Taskbarv3.UI.ViewModels
             catch { }
         }
 
-        private async void OnRegisterHueCommand(object obj)
+        private async void OnRegisterHueCommand(object? obj)
         {
             try
             {

@@ -14,7 +14,7 @@ namespace Taskbarv3.Core.Services
         public bool IsOnline { get; private set; }
 
         private string lastSong = "";
-        private Timer timer;
+        private Timer? timer;
         private IntPtr hndl = IntPtr.Zero;
         private IntPtr correctHwnd = IntPtr.Zero;
         private bool correctHwndFound = false;
@@ -52,7 +52,7 @@ namespace Taskbarv3.Core.Services
 
         public void Stop()
         {
-            timer.Stop();
+            timer?.Stop();
             ResetState();
         }
 
@@ -68,7 +68,7 @@ namespace Taskbarv3.Core.Services
             IsOnline = false;
         }
 
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        private void Timer_Elapsed(object? _, ElapsedEventArgs e)
         {
             EnumAndFetchTitle();
         }

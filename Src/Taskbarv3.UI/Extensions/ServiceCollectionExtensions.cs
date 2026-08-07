@@ -12,21 +12,18 @@ namespace Taskbarv3.UI.Extensions
     {
         public static void AddRegistrations(this IServiceCollection services)
         {
-            var statusService = new StatusService();
-            services.AddSingleton<IStatusService>(statusService);
-            services.AddSingleton<IStatusSetter>(statusService);
+            services.AddSingleton<StatusService>();
+            services.AddSingleton<IStatusService>(sp => sp.GetRequiredService<StatusService>());
+            services.AddSingleton<IStatusSetter>(sp => sp.GetRequiredService<StatusService>());
             services.AddSingleton<IConfigHandler, ConfigHandler>();
             services.AddSingleton<IShortcutsHandler, ShortcutsHandler>();
             services.AddSingleton<IWindowService, WindowService>();
-
-            services.AddScoped<IFavoritesService, FavoritesService>();
-            services.AddScoped<IHueService, HueService>();
-            services.AddScoped<IMaxRequestsGuard, MaxRequestsGuard>();
-            services.AddScoped<IMediaControlService, MediaControlService>();
-            services.AddScoped<IShortcutsHandler, ShortcutsHandler>();
-            services.AddScoped<IWorkAreaService, WorkAreaService>();
-            services.AddScoped<ISongViewerService, SongViewerService>();
-            services.AddScoped<ICpuUsageService, CpuUsageService>();
+            services.AddSingleton<IFavoritesService, FavoritesService>();
+            services.AddSingleton<IHueService, HueService>();
+            services.AddSingleton<IMediaControlService, MediaControlService>();
+            services.AddSingleton<IWorkAreaService, WorkAreaService>();
+            services.AddSingleton<ISongViewerService, SongViewerService>();
+            services.AddSingleton<ICpuUsageService, CpuUsageService>();
 
             services.AddSingleton<SettingsViewModel>();
             services.AddSingleton<AddShortcutViewModel>();

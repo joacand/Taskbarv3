@@ -2,7 +2,7 @@
 {
     public class LinkRoot
     {
-        public Success Success { get; set; }
-        public Error Error { get; set; }
+        public Success? Success { get; set; }
+        public Error? Error { get; set; }
     }
 }

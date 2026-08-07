@@ -11,7 +11,6 @@
     <Company>Joacand</Company>
     <Copyright>Copyright 2026</Copyright>
     <Authors>Joacand</Authors>
-    <LangVersion>latest</LangVersion>
     <StartupObject>Taskbarv3.UI.App</StartupObject>
     <Nullable>enable</Nullable>
   </PropertyGroup>

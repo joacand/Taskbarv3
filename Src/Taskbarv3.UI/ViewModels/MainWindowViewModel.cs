@@ -29,15 +29,14 @@ namespace Taskbarv3.UI.ViewModels
         private readonly SettingsViewModel settingsViewModel;
 
         private static readonly string SONGVIEWER_OFFLINE = "SongViewer offline";
-        private readonly Timer uiUpdateTimer = new Timer();
-        private readonly Timer statusTimer = new Timer();
-        private readonly Timer hueSliderTimer = new Timer();
+        private readonly Timer uiUpdateTimer = new();
+        private readonly Timer statusTimer = new();
+        private readonly Timer hueSliderTimer = new();
         private string dateText = string.Empty;
         private string songViewerText = SONGVIEWER_OFFLINE;
         private int cpuProgressBarValue;
         private int hueSliderValue;
-        private MainConfig config;
-        private string lastSong;
+        private string lastSong = string.Empty;
         private bool songChanged;
         private bool customWorkArea;
         private string statusMsg = "";
@@ -54,7 +53,7 @@ namespace Taskbarv3.UI.ViewModels
         private static readonly int WINDOW_HEIGHT = 45;
         private static readonly int SHORTCUT_WIDTH = 50;
 
-        public ObservableCollection<Shortcut> Shortcuts { get; set; } = new ObservableCollection<Shortcut>();
+        public ObservableCollection<Shortcut> Shortcuts { get; set; } = [];
         public string DateText { get => dateText; set => SetProperty(ref dateText, value); }
         public int CpuProgressBarValue { get => cpuProgressBarValue; set => SetProperty(ref cpuProgressBarValue, value); }
         public int HueSliderValue { get => hueSliderValue; set { SetProperty(ref hueSliderValue, value); HueDimmer_Scroll(); } }
@@ -124,14 +123,14 @@ namespace Taskbarv3.UI.ViewModels
             UpdateUI();
             await Task.Run(() =>
             {
-                config = LoadMainConfig();
+                _ = LoadMainConfig();
                 SongViewerText = SONGVIEWER_OFFLINE;
                 InitHue();
             });
             InitTimer();
         }
 
-        private MainConfig LoadMainConfig()
+        private MainConfig? LoadMainConfig()
         {
             try
             {
@@ -161,7 +160,7 @@ namespace Taskbarv3.UI.ViewModels
             }
         }
 
-        private void OnToggleSongViewer(object _)
+        private void OnToggleSongViewer(object? _)
         {
             lastSong = "";
             if (songViewerService.IsOnline)
@@ -177,22 +176,22 @@ namespace Taskbarv3.UI.ViewModels
             }
         }
 
-        private void OnPlayCommand(object _)
+        private void OnPlayCommand(object? _)
         {
             mediaControlService.PlayPause();
         }
 
-        private void OnSkipCommand(object _)
+        private void OnSkipCommand(object? _)
         {
             mediaControlService.NextSong();
         }
 
-        private void OnPlayFavoritesCommand(object _)
+        private void OnPlayFavoritesCommand(object? _)
         {
             favoritesService.PlayFavorites();
         }
 
-        private void OnAddToFavoritesCommand(object _)
+        private void OnAddToFavoritesCommand(object? _)
         {
             bool successful = favoritesService.AddToFavorites();
             if (successful)
@@ -201,7 +200,7 @@ namespace Taskbarv3.UI.ViewModels
             }
         }
 
-        private void OnAddShortcutCommand(object _)
+        private void OnAddShortcutCommand(object? _)
         {
             windowService.ShowWindow(
                 PopupWindow.AddShortcut,
@@ -210,7 +209,7 @@ namespace Taskbarv3.UI.ViewModels
                 Application.Current.MainWindow.Top);
         }
 
-        private void OnStartShortcutActionCommand(object obj)
+        private void OnStartShortcutActionCommand(object? obj)
         {
             if (obj is Shortcut shortcut)
             {
@@ -225,9 +224,12 @@ namespace Taskbarv3.UI.ViewModels
             }
         }
 
-        private void OnRemoveShortcutCommand(object obj)
+        private void OnRemoveShortcutCommand(object? obj)
         {
-            RemoveShortcut(obj as Shortcut);
+            if (obj is Shortcut sc)
+            {
+                RemoveShortcut(sc);
+            }
         }
 
         private void RemoveShortcut(Shortcut shortcut)
@@ -239,7 +241,7 @@ namespace Taskbarv3.UI.ViewModels
             }
         }
 
-        private void OnToggleWorkAreaCommand(object _)
+        private void OnToggleWorkAreaCommand(object? _)
         {
             if (customWorkArea)
             {
@@ -275,7 +277,7 @@ namespace Taskbarv3.UI.ViewModels
             }
         }
 
-        private void OnOpenSettingsCommand(object _)
+        private void OnOpenSettingsCommand(object? _)
         {
             windowService.ShowWindow(
                 PopupWindow.Settings,
@@ -300,7 +302,7 @@ namespace Taskbarv3.UI.ViewModels
             lastSong = "";
         }
 
-        private void StatusTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void StatusTimer_Elapsed(object? _, ElapsedEventArgs e)
         {
             statusOn = false;
             statusMsg = "";
@@ -348,7 +350,7 @@ namespace Taskbarv3.UI.ViewModels
             uiUpdateTimer.Start();
         }
 
-        private void UiUpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void UiUpdateTimer_Elapsed(object? _, ElapsedEventArgs e)
         {
             UpdateUI();
         }
@@ -360,7 +362,7 @@ namespace Taskbarv3.UI.ViewModels
             HueSliderValue = await hueService.GetBrightnessProcentage();
         }
 
-        private async void HueSliderTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private async void HueSliderTimer_Elapsed(object? _, ElapsedEventArgs e)
         {
             hueSliderTimer.Stop();
             await hueService.DimLight(HueSliderValue);

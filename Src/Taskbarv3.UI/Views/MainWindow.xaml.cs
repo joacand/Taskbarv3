@@ -29,11 +29,11 @@ namespace Taskbarv3.UI.Views
                 {
                     Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        if (e.MiddleButton == MouseButtonState.Pressed)
+                        if (e.MiddleButton == MouseButtonState.Pressed && sender is Button button)
                         {
                             var data = new DataObject();
-                            data.SetData("Source", (sender as Button).DataContext);
-                            DragDrop.DoDragDrop(sender as DependencyObject, data, DragDropEffects.Move);
+                            data.SetData("Source", button.DataContext);
+                            DragDrop.DoDragDrop(button, data, DragDropEffects.Move);
                             e.Handled = true;
                         }
                     }), null);
@@ -43,11 +43,12 @@ namespace Taskbarv3.UI.Views
 
         private void Button_Drop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetData("Source") is Shortcut source)
+            if (e.Data.GetData("Source") is Shortcut source &&
+                sender is Button button &&
+                button.DataContext is Shortcut shortCut &&
+                shortcutsItemsControl.ItemsSource is ObservableCollection<Shortcut> list)
             {
-                var shortCut = (sender as Button).DataContext as Shortcut;
                 var newIndex = shortcutsItemsControl.Items.IndexOf(shortCut);
-                var list = shortcutsItemsControl.ItemsSource as ObservableCollection<Shortcut>;
                 list.RemoveAt(list.IndexOf(source));
                 list.Insert(newIndex, source);
                 shortCut.Index = newIndex;

@@ -9,7 +9,7 @@ namespace Taskbarv3.Core.Services
     public sealed class CpuUsageService : ICpuUsageService, IDisposable
     {
         private readonly MainConfig config;
-        private PerformanceCounter cpuCounter;
+        private PerformanceCounter? cpuCounter;
         private bool Initialized => cpuCounter != null;
 
         public CpuUsageService(IConfigHandler configHandler)
@@ -31,7 +31,7 @@ namespace Taskbarv3.Core.Services
         }
 
 #pragma warning disable CA1416 // Validate platform compatibility
-        public int NextValue => !Initialized ? 0 : (int)Math.Round(cpuCounter.NextValue());
+        public int NextValue => !Initialized || cpuCounter is null ? 0 : (int)Math.Round(cpuCounter.NextValue());
 #pragma warning restore CA1416 // Validate platform compatibility
 
         public void Dispose()
