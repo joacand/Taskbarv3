@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,7 +57,7 @@ namespace Taskbarv3.Infrastructure.Services
             requestGuard.WaitUntilFreeSlots();
 
             var url = $"{user}/lights/{light}/state";
-            var jsonBody = JsonConvert.SerializeObject(new { on });
+            var jsonBody = JsonSerializer.Serialize(new { on }, JsonOptions.Default);
             var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
             _ = await client.PutAsync(url, content);
 
@@ -77,7 +77,7 @@ namespace Taskbarv3.Infrastructure.Services
             var brightnessValue = (int)(255 * (dimValue / 100.0));
 
             var url = $"{user}/lights/{light}/state";
-            var jsonBody = JsonConvert.SerializeObject(new { bri = brightnessValue });
+            var jsonBody = JsonSerializer.Serialize(new { bri = brightnessValue }, JsonOptions.Default);
             var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
             _ = await client.PutAsync(url, content);
 
@@ -99,8 +99,8 @@ namespace Taskbarv3.Infrastructure.Services
             if (string.IsNullOrWhiteSpace(content)) { return 0; }
 
             var rootObject = content.StartsWith('[')
-               ? JsonConvert.DeserializeObject<List<RootObject>>(content)?.FirstOrDefault()
-               : JsonConvert.DeserializeObject<RootObject>(content);
+               ? JsonSerializer.Deserialize<List<RootObject>>(content, JsonOptions.Default)?.FirstOrDefault()
+               : JsonSerializer.Deserialize<RootObject>(content, JsonOptions.Default);
 
             if (rootObject is null || rootObject.Error is not null)
             {
@@ -114,15 +114,15 @@ namespace Taskbarv3.Infrastructure.Services
 
         public async Task<bool> RegisterAccount()
         {
-            var jsonBody = JsonConvert.SerializeObject(new { devicetype = "taskbarv3" });
+            var jsonBody = JsonSerializer.Serialize(new { devicetype = "taskbarv3" }, JsonOptions.Default);
             var requestContent = new StringContent(jsonBody, Encoding.UTF8, "application/json");
             var response = await client.PostAsync("", requestContent);
             var content = await response.Content.ReadAsStringAsync();
             if (string.IsNullOrWhiteSpace(content)) { return false; }
 
             var linkRoot = content.StartsWith('[')
-               ? JsonConvert.DeserializeObject<List<LinkRoot>>(content)?.FirstOrDefault()
-               : JsonConvert.DeserializeObject<LinkRoot>(content);
+               ? JsonSerializer.Deserialize<List<LinkRoot>>(content, JsonOptions.Default)?.FirstOrDefault()
+               : JsonSerializer.Deserialize<LinkRoot>(content, JsonOptions.Default);
 
             if (linkRoot?.Success?.Username is not null && linkRoot.Error is null)
             {

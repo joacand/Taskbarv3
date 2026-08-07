@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -15,12 +15,7 @@ namespace Taskbarv3.Infrastructure.DataAccess
 
         public void SaveToFile(IEnumerable<Shortcut> shortcutsData)
         {
-            using StreamWriter file = File.CreateText(shortcutPath);
-            JsonSerializer serializer = new JsonSerializer()
-            {
-                Formatting = Formatting.Indented
-            };
-            serializer.Serialize(file, shortcutsData);
+            File.WriteAllText(shortcutPath, JsonSerializer.Serialize(shortcutsData, JsonOptions.Default));
         }
 
         public IEnumerable<Shortcut> LoadFromFile()
@@ -28,10 +23,10 @@ namespace Taskbarv3.Infrastructure.DataAccess
             if (!File.Exists(shortcutPath))
             {
                 CreateDirectory();
-                return new List<Shortcut>();
+                return [];
             }
 
-            var shortcuts = JsonConvert.DeserializeObject<List<Shortcut>>(File.ReadAllText(shortcutPath))!;
+            var shortcuts = JsonSerializer.Deserialize<List<Shortcut>>(File.ReadAllText(shortcutPath), JsonOptions.Default)!;
             var shortcutsModified = ConvertShortcutsIfNeededVersionOne(shortcuts);
 
             if (shortcutsModified)
@@ -46,7 +41,7 @@ namespace Taskbarv3.Infrastructure.DataAccess
         /// Converts a ShortCut up to version one if needed to keep backwards compatibility
         /// </summary>
         /// <returns>True if any shortcut was changed</returns>
-        private bool ConvertShortcutsIfNeededVersionOne(List<Shortcut> shortCuts)
+        private static bool ConvertShortcutsIfNeededVersionOne(List<Shortcut> shortCuts)
         {
             const int targetVersion = 1;
 

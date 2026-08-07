@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
 using Taskbarv3.UI.Extensions;
@@ -12,29 +10,30 @@ namespace Taskbarv3.UI
     public partial class App : Application
     {
         [STAThread]
-        public static void Main(string[] args)
+        public static void Main(string[] _)
         {
-            using IHost host = CreateHostBuilder(args).Build();
-            host.Start();
+            using ServiceProvider provider = CreateServiceProvider();
 
             App app = new();
             app.InitializeComponent();
-            var mainWindowViewModel = host.Services.GetRequiredService<MainWindowViewModel>();
-            app.MainWindow = new MainWindow
-            {
-                DataContext = mainWindowViewModel,
-                Visibility = Visibility.Visible
-            };
+
+            var mainWindow = new MainWindow();
+            app.MainWindow = mainWindow;
+            mainWindow.Visibility = Visibility.Visible;
+
+            var mainWindowViewModel = provider.GetRequiredService<MainWindowViewModel>();
+
+            mainWindow.DataContext = mainWindowViewModel;
+            mainWindowViewModel.OnWindowLoaded();
+
             app.Run();
         }
 
-        private static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-            .ConfigureAppConfiguration((hostBuilderContext, configurationBuilder) =>
-                configurationBuilder.AddUserSecrets(typeof(App).Assembly))
-            .ConfigureServices((hostContext, services) =>
-            {
-                services.AddRegistrations();
-            });
+        private static ServiceProvider CreateServiceProvider()
+        {
+            var services = new ServiceCollection();
+            services.AddRegistrations();
+            return services.BuildServiceProvider();
+        }
     }
 }
