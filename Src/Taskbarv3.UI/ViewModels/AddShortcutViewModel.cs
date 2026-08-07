@@ -12,18 +12,18 @@ namespace Taskbarv3.UI.ViewModels
     {
         private readonly IWindowService windowService;
 
-        private string shortcutName;
-        private string shortcutPath;
-        private string shortcutIconPath;
+        private string? shortcutName;
+        private string? shortcutPath;
+        private string? shortcutIconPath;
 
         public ICommand BrowsePathCommand { get; set; }
         public ICommand BrowseIconCommand { get; set; }
         public ICommand OkCommand { get; set; }
         public ICommand CancelCommand { get; set; }
 
-        public string ShortcutName { get => shortcutName; set => SetProperty(ref shortcutName, value); }
-        public string ShortcutPath { get => shortcutPath; set => SetProperty(ref shortcutPath, value); }
-        public string ShortcutIconPath { get => shortcutIconPath; set => SetProperty(ref shortcutIconPath, value); }
+        public string? ShortcutName { get => shortcutName; set => SetProperty(ref shortcutName, value); }
+        public string? ShortcutPath { get => shortcutPath; set => SetProperty(ref shortcutPath, value); }
+        public string? ShortcutIconPath { get => shortcutIconPath; set => SetProperty(ref shortcutIconPath, value); }
 
         public AddShortcutViewModel(IWindowService windowService)
         {
@@ -35,20 +35,20 @@ namespace Taskbarv3.UI.ViewModels
             CancelCommand = new RelayCommand(OnCancelCommand);
         }
 
-        private void OnCancelCommand(object _)
+        private void OnCancelCommand(object? _)
         {
             windowService.CloseWindow(PopupWindow.AddShortcut);
         }
 
-        private void OnOkCommand(object _)
+        private void OnOkCommand(object? _)
         {
             var workingDir = "";
-            var path = ShortcutPath.Replace("\"", "").Trim();
+            var path = ShortcutPath?.Replace("\"", "").Trim();
             if (string.IsNullOrWhiteSpace(path))
             {
                 windowService.CloseWindow(PopupWindow.AddShortcut);
             }
-            string[] pathSplit = path.Split('\\');
+            string[] pathSplit = path!.Split('\\');
             if (!path.Equals("") && pathSplit.Length > 1)
             {
                 workingDir = path.Replace(pathSplit[pathSplit.Length - 1], "");
@@ -57,9 +57,9 @@ namespace Taskbarv3.UI.ViewModels
             windowService.CloseWindow(PopupWindow.AddShortcut);
         }
 
-        private void OnBrowseIconCommand(object _)
+        private void OnBrowseIconCommand(object? _)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog
+            OpenFileDialog fileDialog = new()
             {
                 Title = "Open Image File",
                 Filter = "Image Files|*.bmp;*.gif;*.png;*.jpeg;*.jpg|All files (*.*)|*.*",
@@ -73,9 +73,9 @@ namespace Taskbarv3.UI.ViewModels
             }
         }
 
-        private void OnBrowsePathCommand(object _)
+        private void OnBrowsePathCommand(object? _)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog
+            OpenFileDialog fileDialog = new()
             {
                 Title = "Open EXE File",
                 Filter = "EXE Files|*.exe",

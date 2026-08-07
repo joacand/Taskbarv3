@@ -31,7 +31,7 @@ namespace Taskbarv3.Infrastructure.DataAccess
                 return new List<Shortcut>();
             }
 
-            var shortcuts = JsonConvert.DeserializeObject<List<Shortcut>>(File.ReadAllText(shortcutPath));
+            var shortcuts = JsonConvert.DeserializeObject<List<Shortcut>>(File.ReadAllText(shortcutPath))!;
             var shortcutsModified = ConvertShortcutsIfNeededVersionOne(shortcuts);
 
             if (shortcutsModified)

@@ -47,7 +47,7 @@ namespace Taskbarv3.Core.Models
                     var success = GetMonitorInfo(hMonitor, ref monitor);
                     if (success)
                     {
-                        DisplayInfo displayinfo = new DisplayInfo
+                        DisplayInfo displayinfo = new()
                         {
                             ScreenWidth = monitor.Monitor.Right - monitor.Monitor.Left,
                             ScreenHeight = monitor.Monitor.Bottom - monitor.Monitor.Top
@@ -72,7 +72,7 @@ namespace Taskbarv3.Core.Models
             public Rect WorkArea;
             public uint Flags;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-            public string DeviceName;
+            public string? DeviceName;
         }
     }
 }

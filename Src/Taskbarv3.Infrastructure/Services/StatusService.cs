@@ -5,11 +5,7 @@ namespace Taskbarv3.Infrastructure.Services
 {
     public class StatusService : IStatusService
     {
-        public Action<string> SetStatusAction { get; set; }
-
-        public StatusService()
-        {
-        }
+        public Action<string>? SetStatusAction { get; set; }
 
         public void SetStatus(string message)
         {
