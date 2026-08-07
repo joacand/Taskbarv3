@@ -23,7 +23,7 @@
         <ImageBrush x:Key="ScreenImage" ImageSource="../Resources/screen.png" />
         <ImageBrush x:Key="PlayImage" ImageSource="../Resources/play.png" />
         <ImageBrush x:Key="SkipImage" ImageSource="../Resources/skip.png" />
-        <ImageBrush x:Key="TransparentImage" ImageSource="../Resources/transparent.png" />
+        <BitmapImage x:Key="TransparentImage" UriSource="pack://application:,,,/Resources/transparent.png" />
 
         <Style TargetType="Button">
             <Setter Property="Background" Value="LimeGreen"/>

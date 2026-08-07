@@ -112,10 +112,13 @@ namespace Taskbarv3.UI.ViewModels
             Hub.Default.Subscribe<ShortcutAddedEvent>(OnAddShortcutEvent);
             Hub.Default.Subscribe<ShortcutModifiedEvent>(OnShortcutModifiedEvent);
             this.statusService.SetStatusAction = OnStatusChange;
-            SetWorkArea();
+        }
 
-            Task.Run(async () => await InitAsync());
-            Task.Run(() => LoadShortcuts());
+        public void OnWindowLoaded()
+        {
+            SetWorkArea();
+            _ = InitAsync();
+            LoadShortcuts();
         }
 
         private async Task InitAsync()
@@ -149,7 +152,7 @@ namespace Taskbarv3.UI.ViewModels
             {
                 var shortcuts = shortcutsHandler.LoadFromFile();
 
-                foreach (Shortcut shortcut in shortcutsHandler.LoadFromFile())
+                foreach (Shortcut shortcut in shortcuts)
                 {
                     Shortcuts.Add(shortcut);
                 }

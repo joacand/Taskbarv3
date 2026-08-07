@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Configuration;
 using System.IO;
 using Taskbarv3.Core.Interfaces;
@@ -11,6 +12,9 @@ namespace Taskbarv3.Infrastructure.DataAccess
         private static readonly string configPath =
             Path.Join(ApplicationSettingsDirectory, ConfigurationManager.AppSettings["TaskbarConfigName"]);
 
+        private MainConfig? cachedConfig;
+        private DateTime cachedConfigLastWriteUtc;
+
         public void SaveToFile(MainConfig config)
         {
             using StreamWriter file = File.CreateText(configPath);
@@ -19,14 +23,31 @@ namespace Taskbarv3.Infrastructure.DataAccess
                 Formatting = Formatting.Indented
             };
             serializer.Serialize(file, config);
+
+            cachedConfig = config;
+            cachedConfigLastWriteUtc = File.GetLastWriteTimeUtc(configPath);
         }
 
         public MainConfig LoadFromFile()
         {
-            return (File.Exists(configPath)
-                ? JsonConvert.DeserializeObject<MainConfig>(File.ReadAllText(configPath))
-                : CreateFresh())
-                ?? CreateFresh();
+            if (File.Exists(configPath))
+            {
+                var lastWrite = File.GetLastWriteTimeUtc(configPath);
+                if (cachedConfig != null && cachedConfigLastWriteUtc == lastWrite)
+                {
+                    return cachedConfig;
+                }
+
+                var loaded = JsonConvert.DeserializeObject<MainConfig>(File.ReadAllText(configPath));
+                if (loaded != null)
+                {
+                    cachedConfig = loaded;
+                    cachedConfigLastWriteUtc = lastWrite;
+                    return loaded;
+                }
+            }
+
+            return CreateFresh();
         }
 
         private MainConfig CreateFresh()

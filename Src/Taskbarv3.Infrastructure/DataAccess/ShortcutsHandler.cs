@@ -28,7 +28,7 @@ namespace Taskbarv3.Infrastructure.DataAccess
             if (!File.Exists(shortcutPath))
             {
                 CreateDirectory();
-                return new List<Shortcut>();
+                return [];
             }
 
             var shortcuts = JsonConvert.DeserializeObject<List<Shortcut>>(File.ReadAllText(shortcutPath))!;
@@ -46,7 +46,7 @@ namespace Taskbarv3.Infrastructure.DataAccess
         /// Converts a ShortCut up to version one if needed to keep backwards compatibility
         /// </summary>
         /// <returns>True if any shortcut was changed</returns>
-        private bool ConvertShortcutsIfNeededVersionOne(List<Shortcut> shortCuts)
+        private static bool ConvertShortcutsIfNeededVersionOne(List<Shortcut> shortCuts)
         {
             const int targetVersion = 1;
 
