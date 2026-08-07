@@ -43,10 +43,12 @@ namespace Taskbarv3.UI.Views
 
         private void Button_Drop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetData("Source") is Shortcut source && sender is Button button && button.DataContext is Shortcut shortCut)
+            if (e.Data.GetData("Source") is Shortcut source &&
+                sender is Button button &&
+                button.DataContext is Shortcut shortCut &&
+                shortcutsItemsControl.ItemsSource is ObservableCollection<Shortcut> list)
             {
                 var newIndex = shortcutsItemsControl.Items.IndexOf(shortCut);
-                var list = shortcutsItemsControl.ItemsSource as ObservableCollection<Shortcut>;
                 list.RemoveAt(list.IndexOf(source));
                 list.Insert(newIndex, source);
                 shortCut.Index = newIndex;
