@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -15,12 +15,7 @@ namespace Taskbarv3.Infrastructure.DataAccess
 
         public void SaveToFile(IEnumerable<Shortcut> shortcutsData)
         {
-            using StreamWriter file = File.CreateText(shortcutPath);
-            JsonSerializer serializer = new JsonSerializer()
-            {
-                Formatting = Formatting.Indented
-            };
-            serializer.Serialize(file, shortcutsData);
+            File.WriteAllText(shortcutPath, JsonSerializer.Serialize(shortcutsData, JsonOptions.Default));
         }
 
         public IEnumerable<Shortcut> LoadFromFile()
@@ -31,7 +26,7 @@ namespace Taskbarv3.Infrastructure.DataAccess
                 return [];
             }
 
-            var shortcuts = JsonConvert.DeserializeObject<List<Shortcut>>(File.ReadAllText(shortcutPath))!;
+            var shortcuts = JsonSerializer.Deserialize<List<Shortcut>>(File.ReadAllText(shortcutPath), JsonOptions.Default)!;
             var shortcutsModified = ConvertShortcutsIfNeededVersionOne(shortcuts);
 
             if (shortcutsModified)

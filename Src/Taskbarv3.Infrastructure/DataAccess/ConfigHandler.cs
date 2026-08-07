@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 using System;
 using System.Configuration;
 using System.IO;
@@ -17,12 +17,7 @@ namespace Taskbarv3.Infrastructure.DataAccess
 
         public void SaveToFile(MainConfig config)
         {
-            using StreamWriter file = File.CreateText(configPath);
-            JsonSerializer serializer = new()
-            {
-                Formatting = Formatting.Indented
-            };
-            serializer.Serialize(file, config);
+            File.WriteAllText(configPath, JsonSerializer.Serialize(config, JsonOptions.Default));
 
             cachedConfig = config;
             cachedConfigLastWriteUtc = File.GetLastWriteTimeUtc(configPath);
@@ -38,7 +33,7 @@ namespace Taskbarv3.Infrastructure.DataAccess
                     return cachedConfig;
                 }
 
-                var loaded = JsonConvert.DeserializeObject<MainConfig>(File.ReadAllText(configPath));
+                var loaded = JsonSerializer.Deserialize<MainConfig>(File.ReadAllText(configPath), JsonOptions.Default);
                 if (loaded != null)
                 {
                     cachedConfig = loaded;
