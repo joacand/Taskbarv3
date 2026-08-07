@@ -47,11 +47,12 @@ namespace Taskbarv3.UI.ViewModels
             if (string.IsNullOrWhiteSpace(path))
             {
                 windowService.CloseWindow(PopupWindow.AddShortcut);
+                return;
             }
-            string[] pathSplit = path!.Split('\\');
+            string[] pathSplit = path.Split('\\');
             if (!path.Equals("") && pathSplit.Length > 1)
             {
-                workingDir = path.Replace(pathSplit[pathSplit.Length - 1], "");
+                workingDir = path.Replace(pathSplit[^1], "");
             }
             Hub.Default.Publish(new ShortcutAddedEvent(new ShortcutMetaData(ShortcutName ?? string.Empty, path, ShortcutIconPath, workingDir)));
             windowService.CloseWindow(PopupWindow.AddShortcut);

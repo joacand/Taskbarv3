@@ -112,6 +112,8 @@ namespace Taskbarv3.UI.ViewModels
             Hub.Default.Subscribe<ShortcutAddedEvent>(OnAddShortcutEvent);
             Hub.Default.Subscribe<ShortcutModifiedEvent>(OnShortcutModifiedEvent);
             this.statusService.SetStatusAction = OnStatusChange;
+
+            statusTimer.Elapsed += StatusTimer_Elapsed;
         }
 
         public void OnWindowLoaded()
@@ -300,7 +302,6 @@ namespace Taskbarv3.UI.ViewModels
             UpdateSongLabelSize();
 
             statusTimer.Interval = 1000;
-            statusTimer.Elapsed += StatusTimer_Elapsed;
             statusTimer.Start();
             lastSong = "";
         }
@@ -360,15 +361,29 @@ namespace Taskbarv3.UI.ViewModels
 
         private async void InitHue()
         {
-            hueSliderTimer.Interval = 50;
-            hueSliderTimer.Elapsed += HueSliderTimer_Elapsed;
-            HueSliderValue = await hueService.GetBrightnessProcentage();
+            try
+            {
+                hueSliderTimer.Interval = 50;
+                hueSliderTimer.Elapsed += HueSliderTimer_Elapsed;
+                HueSliderValue = await hueService.GetBrightnessProcentage();
+            }
+            catch (Exception ex)
+            {
+                statusService.SetStatus($"Exception: {ex}");
+            }
         }
 
         private async void HueSliderTimer_Elapsed(object? _, ElapsedEventArgs e)
         {
-            hueSliderTimer.Stop();
-            await hueService.DimLight(HueSliderValue);
+            try
+            {
+                hueSliderTimer.Stop();
+                await hueService.DimLight(HueSliderValue);
+            }
+            catch (Exception ex)
+            {
+                statusService.SetStatus($"Exception: {ex}");
+            }
         }
 
         private void HueDimmer_Scroll()
